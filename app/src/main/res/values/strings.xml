@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Arr!</string>
+
+    <string name="PERMISSION_TITLE">Permission request</string>
+    <string name="PERMISSION_BODY">To able work we should request permission from app settings</string>
+    <string name="PERMISSION_POS_BUTTON">App settings</string>
+    <string name="PERMISSION_NEG_BUTTON">Exit</string>
 </resources>

@@ -1,13 +1,11 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
 
     defaultConfig {
-        applicationId "by.deniotokiari.arr"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
         versionCode version_code as Integer
@@ -20,29 +18,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
-    implementation project(':core')
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation libs.kotlin
-    implementation libs.kotlin_coroutines_core
-    implementation libs.kotlin_coroutines_android
-
     implementation libs.appcompat
-    implementation libs.recyclerview
-    implementation libs.lifecycle_extensions
-    implementation libs.room_runtime
-
-    implementation libs.koin_android
-    implementation libs.koin_scope
-    implementation libs.koin_viewmodel
-
-    kapt libs.lifecycle_compiler
-    kapt libs.room_compiler
-
-    testImplementation libs.robolectric
-    testImplementation libs.junit
 }
