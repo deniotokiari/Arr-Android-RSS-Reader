@@ -2,6 +2,7 @@ package by.deniotokiari.arr
 
 import android.app.Application
 import by.deniotokiari.arr.di.appModule
+import by.deniotokiari.arr.di.viewModelModule
 import org.koin.android.ext.android.startKoin
 
 class CustomApp : Application() {
@@ -11,7 +12,8 @@ class CustomApp : Application() {
 
         startKoin(
             this, listOf(
-                appModule()
+                appModule(),
+                viewModelModule()
             )
         )
     }

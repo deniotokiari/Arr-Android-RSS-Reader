@@ -5,4 +5,6 @@
     <string name="PERMISSION_BODY">To able work we should request permission from app settings</string>
     <string name="PERMISSION_POS_BUTTON">App settings</string>
     <string name="PERMISSION_NEG_BUTTON">Exit</string>
+    <string name="ADD_FEED">Add feed</string>
+    <string name="IMPORT_FEEDS">Import feeds</string>
 </resources>
