@@ -19,7 +19,7 @@ interface RssFeedDao {
     @Query("SELECT * FROM rssfeed")
     fun all(): LiveData<List<RssFeed>>
 
-    @Query("SELECT * FROM RssFeed LIMIT :limit")
+    @Query("SELECT * FROM rssfeed LIMIT :limit")
     fun all(limit: Int): LiveData<List<RssFeed>>
 
     @Query("SELECT * FROM rssfeed WHERE id = :id")
