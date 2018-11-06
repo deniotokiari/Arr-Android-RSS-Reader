@@ -7,7 +7,7 @@ import by.deniotokiari.arr.db.entity.RssFeed
 @Dao
 interface RssFeedDao {
 
-    @Insert()
+    @Insert
     fun insert(vararg feeds: RssFeed)
 
     @Update
