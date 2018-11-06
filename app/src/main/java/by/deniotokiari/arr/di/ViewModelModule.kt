@@ -10,6 +10,6 @@ fun viewModelModule(): Module = module {
 
     viewModel { MainActivityViewModel(get()) }
 
-    viewModel { ImportRssFeedViewModel(get()) }
+    viewModel { ImportRssFeedViewModel(get(), get()) }
 
 }

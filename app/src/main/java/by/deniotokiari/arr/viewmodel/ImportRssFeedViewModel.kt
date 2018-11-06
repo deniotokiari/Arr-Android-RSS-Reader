@@ -6,10 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import by.deniotokiari.arr.coroutines.launchBg
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.RssFeed
+import by.deniotokiari.core.coroutines.bg
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.InputStream
 
 class ImportRssFeedViewModel(private val context: Context, private val db: AppDatabase) : ViewModel() {
@@ -23,8 +25,12 @@ class ImportRssFeedViewModel(private val context: Context, private val db: AppDa
 
     fun setFileUri(uri: Uri?) {
         job?.cancel()
-        job = launchBg {
+        job = GlobalScope.launch(bg) {
             val result: List<RssFeed>? = parseXml(getInputStream(context, uri))
+
+            result?.run {
+                db.rssFeedDao().insert(this)
+            }
 
             feeds.postValue(result)
         }

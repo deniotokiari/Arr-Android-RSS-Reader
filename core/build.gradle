@@ -26,4 +26,7 @@ dependencies {
 
     implementation libs.kotlin
     implementation libs.appcompat
+
+    implementation libs.kotlin_coroutines_core
+    implementation libs.kotlin_coroutines_android
 }

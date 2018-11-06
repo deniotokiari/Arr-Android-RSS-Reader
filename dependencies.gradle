@@ -25,6 +25,8 @@ ext.versions = [
         junit               : '4.12',
 
         koin                : '1.0.1',
+
+        testing_core        : '1.0.0',
 ]
 
 ext.gradlePlugins = [
@@ -58,4 +60,6 @@ ext.libs = [
         koin_android             : "org.koin:koin-android:$versions.koin",
         koin_scope               : "org.koin:koin-androidx-scope:$versions.koin",
         koin_viewmodel           : "org.koin:koin-androidx-viewmodel:$versions.koin",
+
+        testing_core             : "android.arch.core:core-testing:$versions.testing_core"
 ]

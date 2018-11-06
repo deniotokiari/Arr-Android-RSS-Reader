@@ -45,4 +45,5 @@ dependencies {
 
     testImplementation libs.robolectric
     testImplementation libs.junit
+    testImplementation libs.testing_core
 }

@@ -8,7 +8,10 @@ import by.deniotokiari.arr.db.entity.RssFeed
 interface RssFeedDao {
 
     @Insert
-    fun insert(vararg feeds: RssFeed)
+    fun insert(feed: RssFeed): Long
+
+    @Insert
+    fun insert(feeds: List<RssFeed>): LongArray
 
     @Update
     fun update(vararg feeds: RssFeed)
