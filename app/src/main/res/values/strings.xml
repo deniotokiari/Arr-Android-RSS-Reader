@@ -7,4 +7,6 @@
     <string name="PERMISSION_NEG_BUTTON">Exit</string>
     <string name="ADD_FEED">Add feed</string>
     <string name="IMPORT_FEEDS">Import feeds</string>
+    <string name="IMPORT_FROM_FILE">Import from file</string>
+    <string name="SELECT_A_FILE_TO_IMPORT">Select a file to import</string>
 </resources>
