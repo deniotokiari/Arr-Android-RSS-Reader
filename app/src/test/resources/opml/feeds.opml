@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<opml version="1.0">
+    <head>
+        <title>Денис subscriptions in feedly Cloud</title>
+    </head>
+    <body>
+        <outline text="Science" title="Science">
+            <outline type="rss" text="Открытый космос Зеленого кота" title="Открытый космос Зеленого кота" xmlUrl="http://zelenyikot.livejournal.com/data/rss" htmlUrl="https://zelenyikot.livejournal.com/"/>
+        </outline>
+        <outline text="Japan" title="Japan">
+            <outline type="rss" text="THORAnime" title="THORAnime" xmlUrl="http://www.thoranime.org/?feed=rss2"/>
+            <outline type="rss" text="::AniDB.net:: Just started ::" title="::AniDB.net:: Just started ::" xmlUrl="http://feed43.com/2536334038654323.xml" htmlUrl="http://anidb.net/perl-bin/animedb.pl?show=main"/>
+            <outline type="rss" text="animefag.ru / Все новости" title="animefag.ru / Все новости" xmlUrl="http://animefag.ru/rss/" htmlUrl="http://animefag.ru/"/>
+            <outline type="rss" text="News - MyAnimeList.net" title="News - MyAnimeList.net" xmlUrl="http://myanimelist.net/rss.php?type=news" htmlUrl="https://myanimelist.net/news?_location=rss"/>
+            <outline type="rss" text="日本" title="日本" xmlUrl="http://community.livejournal.com/ru_japan/data/rss" htmlUrl="https://ru-japan.livejournal.com/"/>
+            <outline type="rss" text="ShitSubBusters" title="ShitSubBusters" xmlUrl="http://ssb.shiftsubs.ru/?feed=rss2" htmlUrl="https://shiftsubs.ru"/>
+            <outline type="rss" text="Afternoon Naps Empire" title="Afternoon Naps Empire" xmlUrl="http://afternoonnapsempire.org/feed/" htmlUrl="http://afternoonnapsempire.org"/>
+            <outline type="rss" text="Culture Japan - Your portal to Japan : Main Feed" title="Culture Japan - Your portal to Japan : Main Feed" xmlUrl="http://feeds.feedburner.com/dannychoo_com_main_article_feed_eng" htmlUrl="http://www.dannychoo.com"/>
+            <outline type="rss" text="Kira-Reviews" title="Kira-Reviews" xmlUrl="http://www.kira-reviews.com/feed" htmlUrl="http://www.kira-reviews.com"/>
+            <outline type="rss" text="Аниджоин - Аниме в Беларуси" title="Аниджоин - Аниме в Беларуси" xmlUrl="http://anijoin.by/rss/ccs/2-nidzhoin-nimevelarusi/" htmlUrl="http://anijoin.by/page/news"/>
+            <outline type="rss" text="Sugoi! Аниме Блог" title="Sugoi! Аниме Блог" xmlUrl="http://sugoi.animeblogs.ru/feed/" htmlUrl="http://sugoi.animeblogs.ru"/>
+            <outline type="rss" text="Kotaku" title="Kotaku" xmlUrl="http://feeds.gawker.com/kotaku/vip" htmlUrl="https://kotaku.com"/>
+            <outline type="rss" text="milky horrors" title="milky horrors" xmlUrl="http://milky-horrors.livejournal.com/data/rss" htmlUrl="https://milky-horrors.livejournal.com/"/>
+        </outline>
+        <outline text="Вело" title="Вело">
+            <outline type="rss" text="Паталагичиский падонак" title="Паталагичиский падонак" xmlUrl="http://vile-gnus.livejournal.com/data/rss" htmlUrl="https://vile-gnus.livejournal.com/"/>
+            <outline type="rss" text="ВелоГродно" title="ВелоГродно" xmlUrl="http://feeds.feedburner.com/velogrodnoby" htmlUrl="https://velogrodno.by"/>
+            <outline type="rss" text="XC и MTB в РБ" title="XC и MTB в РБ" xmlUrl="http://mtbrb.org/rss/index/" htmlUrl="https://mtbrb.org"/>
+            <outline type="rss" text="Ногибоги. Для всех, кто любит бег. Техника бега, тренировки, бег для начинающих, мотивация, соревнования" title="Ногибоги. Для всех, кто любит бег. Техника бега, тренировки, бег для начинающих, мотивация, соревнования" xmlUrl="http://nogibogi.com.ua/feed/" htmlUrl="https://nogibogi.com"/>
+            <outline type="rss" text="Сайт Котовского" title="Сайт Котовского" xmlUrl="http://feeds.feedburner.com/kotovski_cat" htmlUrl="http://kotovski.net"/>
+        </outline>
+        <outline text="Programming" title="Programming">
+            <outline type="rss" text="tonsky.me" title="tonsky.me" xmlUrl="http://tonsky.me/blog/atom.xml" htmlUrl="http://tonsky.me/"/>
+            <outline type="rss" text="Стой под стрелой" title="Стой под стрелой" xmlUrl="http://tonsky.livejournal.com/data/rss" htmlUrl="https://tonsky.livejournal.com/"/>
+            <outline type="rss" text="Handpicked stories about Programming on Medium" title="Handpicked stories about Programming on Medium" xmlUrl="https://medium.com/feed/topic/programming" htmlUrl="https://medium.com/topic/programming?source=rss-------8-----------------programming"/>
+            <outline type="rss" text="Handpicked stories about Software Engineering on Medium" title="Handpicked stories about Software Engineering on Medium" xmlUrl="https://medium.com/feed/topic/software-engineering" htmlUrl="https://medium.com/topic/software-engineering?source=rss-------8-----------------software_engineering"/>
+            <outline type="rss" text="Planet Clojure" title="Planet Clojure" xmlUrl="http://planet.clojure.in/atom.xml" htmlUrl="http://planet.clojure.in/"/>
+        </outline>
+        <outline text="News" title="News">
+            <outline type="rss" text="Vandrouki.by" title="Vandrouki.by" xmlUrl="http://feeds.feedburner.com/vandrouki" htmlUrl="https://vandrouki.by"/>
+            <outline type="rss" text="Блог Гродно s13" title="Блог Гродно s13" xmlUrl="http://s13.ru/?feed=rss2" htmlUrl="http://s13.ru"/>
+            <outline type="rss" text="Onliner.by" title="Onliner.by" xmlUrl="http://www.onliner.ru/feed" htmlUrl="http://www.onliner.by/"/>
+            <outline type="rss" text="TUT.BY: ЛЕДИ" title="TUT.BY: ЛЕДИ" xmlUrl="http://news.tut.by/rss/lady/all.rss" htmlUrl="https://lady.tut.by/"/>
+        </outline>
+        <outline text="IT" title="IT">
+            <outline type="rss" text="dev.by: Все о работе в IT" title="dev.by: Все о работе в IT" xmlUrl="https://dev.by/rss" htmlUrl="https://dev.by/"/>
+            <outline type="rss" text="Blogerator's newsline - новостной H..." title="Blogerator's newsline - новостной H..." xmlUrl="http://blogerator.ru/feed" htmlUrl="http://blogerator.org/"/>
+            <outline type="rss" text="AndroidViews" title="AndroidViews" xmlUrl="http://www.androidviews.net/feed/" htmlUrl="http://www.androidviews.net"/>
+            <outline type="rss" text="Ebanoe.IT — голая правда о нашем айти" title="Ebanoe.IT — голая правда о нашем айти" xmlUrl="http://ebanoe.it/feed/" htmlUrl="https://ebanoe.it"/>
+            <outline type="rss" text="Android Developers Blog" title="Android Developers Blog" xmlUrl="http://feeds.feedburner.com/blogspot/hsDu" htmlUrl="http://android-developers.googleblog.com/"/>
+            <outline type="rss" text="«Не занесли». Игры, кино, комиксы" title="«Не занесли». Игры, кино, комиксы" xmlUrl="http://podster.fm/rss.xml?pid=26991" htmlUrl="http://nezanesli.podster.fm"/>
+            <outline type="rss" text="Хабрахабр:" title="Хабрахабр:" xmlUrl="http://habrahabr.ru/rss/" htmlUrl="https://habr.com/"/>
+            <outline type="rss" text="Geektimes" title="Geektimes" xmlUrl="http://geektimes.ru/rss/hubs/all/" htmlUrl="https://geektimes.com/posts/collective/all/"/>
+            <outline type="rss" text="Posts of Recent Changes" title="Posts of Recent Changes" xmlUrl="http://tools.android.com/recent/posts.xml" htmlUrl="https://sites.google.com/feeds/content/android.com/tools"/>
+            <outline type="rss" text="Kanobu.ru: статьи" title="Kanobu.ru: статьи" xmlUrl="http://kanobu.ru/rss/best/" htmlUrl="https://kanobu.ru/articles/"/>
+        </outline>
+        <outline type="rss" text="мой ЖЖ" title="мой ЖЖ" xmlUrl="http://ugenk.livejournal.com/data/atom" htmlUrl="https://ugenk.livejournal.com/"/>
+        <outline type="rss" text="Блог о городах" title="Блог о городах" xmlUrl="http://maxkatz.livejournal.com/data/rss" htmlUrl="https://maxkatz.livejournal.com/"/>
+        <outline type="rss" text="ХУдЕЕМ В КРИОСАУНЕ! Минута зимы в знойное лето" title="ХУдЕЕМ В КРИОСАУНЕ! Минута зимы в знойное лето" xmlUrl="http://tema.livejournal.com/data/rss" htmlUrl="https://tema.livejournal.com/"/>
+        <outline type="rss" text="Навальный" title="Навальный" xmlUrl="http://navalny.livejournal.com/data/rss" htmlUrl="https://navalny.livejournal.com/"/>
+        <outline type="rss" text="Свободное общение" title="Свободное общение" xmlUrl="http://teh-nomad.livejournal.com/data/rss" htmlUrl="https://teh-nomad.livejournal.com/"/>
+        <outline type="rss" text="Veni, Vidi" title="Veni, Vidi" xmlUrl="http://www.tema.ru/travel/travel.rdf" htmlUrl="http://tema.ru/travel/"/>
+        <outline type="rss" text="Spoon!" title="Spoon!" xmlUrl="http://spoon.com.ua/feed/" htmlUrl="http://spoon.com.ua"/>
+        <outline type="rss" text="Прибежище корчмастера" title="Прибежище корчмастера" xmlUrl="http://nge-sachiel.livejournal.com/data/rss" htmlUrl="https://nge-sachiel.livejournal.com/"/>
+        <outline type="rss" text="Мысли, ворованные у себя" title="Мысли, ворованные у себя" xmlUrl="http://bentkovsky.livejournal.com/data/rss" htmlUrl="https://bentkovsky.livejournal.com/"/>
+        <outline type="rss" text="Страница Виртуальных Путешественников" title="Страница Виртуальных Путешественников" xmlUrl="http://sergeydolya.livejournal.com/data/rss" htmlUrl="https://sergeydolya.livejournal.com/"/>
+        <outline type="rss" text="Из Японии" title="Из Японии" xmlUrl="http://yuta-siberia.livejournal.com/data/atom" htmlUrl="https://yuta-siberia.livejournal.com/"/>
+        <outline type="rss" text="Один день из моей жизни" title="Один день из моей жизни" xmlUrl="http://odin-moy-den.livejournal.com/data/rss" htmlUrl="https://odin-moy-den.livejournal.com/"/>
+        <outline type="rss" text="Бложик Санды о Японии" title="Бложик Санды о Японии" xmlUrl="http://www.kawaii-sanda.info/feeds/posts/default" htmlUrl="http://www.kawaii-sanda.info/"/>
+        <outline type="rss" text="NewsBelarus - Сенсации из центра Европы" title="NewsBelarus - Сенсации из центра Европы" xmlUrl="http://newsbelarus.net/feed/" htmlUrl="http://newsbelarus.net"/>
+        <outline type="rss" text="Белпомоечка" title="Белпомоечка" xmlUrl="http://by-trash.livejournal.com/data/rss" htmlUrl="https://by-trash.livejournal.com/"/>
+        <outline type="rss" text="Доклады инопланетянина" title="Доклады инопланетянина" xmlUrl="http://feeds.feedburner.com/dzimitori/NyTx" htmlUrl="http://japan.dzimitori.com"/>
+        <outline type="rss" text="&quot;Японские Городовые&quot;" title="&quot;Японские Городовые&quot;" xmlUrl="http://gorodovye.rpod.ru/rss.xml" htmlUrl="http://gorodovye.rpod.ru/"/>
+        <outline type="rss" text="Самый сок!" title="Самый сок!" xmlUrl="http://ibigdan.livejournal.com/data/rss" htmlUrl="https://ibigdan.livejournal.com/"/>
+        <outline type="rss" text="Журнал Esquire" title="Журнал Esquire" xmlUrl="http://feeds.feedburner.com/esquire-ru" htmlUrl="http://esquire.ru/"/>
+        <outline type="rss" text="Tozhemne" title="Tozhemne" xmlUrl="http://tozhemne.com/feed" htmlUrl="http://tozhemne.com/"/>
+        <outline type="rss" text="Норвежский Лесной" title="Норвежский Лесной" xmlUrl="http://nl.livejournal.com/data/rss" htmlUrl="https://nl.livejournal.com/"/>
+        <outline type="rss" text="JoyReactor.cc" title="JoyReactor.cc" xmlUrl="http://feeds2.feedburner.com/joyreactor" htmlUrl="http://joyreactor.cc/"/>
+        <outline type="rss" text="Make Russia warm again" title="Make Russia warm again" xmlUrl="http://zyalt.livejournal.com/data/rss" htmlUrl="https://varlamov.ru/"/>
+        <outline type="rss" text="stalic" title="stalic" xmlUrl="http://stalic.livejournal.com/data/rss" htmlUrl="https://stalic.livejournal.com/"/>
+    </body>
+</opml>

@@ -24,30 +24,25 @@ class ImportRssFeedViewModel(private val context: Context, private val db: AppDa
     }
 
     fun setFileUri(uri: Uri?) {
+        fun getInputStream(context: Context, uri: Uri?): InputStream? = uri?.let { context.contentResolver.openInputStream(uri) }
+
+        fun parseXml(stream: InputStream?): List<RssFeed>? {
+            return null
+        }
+
         job?.cancel()
+
         job = GlobalScope.launch(bg) {
             val result: List<RssFeed>? = parseXml(getInputStream(context, uri))
 
-            result?.run {
-                db.rssFeedDao().insert(this)
+            result?.also {
+                db.rssFeedDao().insert(it)
             }
 
             feeds.postValue(result)
         }
     }
 
-    fun getFeedsCount(): LiveData<Int> = Transformations.map(feeds) { it.size }
-
-    private fun parseXml(stream: InputStream?): List<RssFeed>? {
-        return null
-    }
-
-    private fun getInputStream(context: Context, uri: Uri?): InputStream? {
-        uri?.let {
-            return context.contentResolver.openInputStream(uri)
-        }
-
-        return null
-    }
+    fun getFeedsCount(): LiveData<Int> = Transformations.map(feeds) { it?.size }
 
 }

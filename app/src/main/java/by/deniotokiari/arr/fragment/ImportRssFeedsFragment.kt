@@ -1,7 +1,6 @@
 package by.deniotokiari.arr.fragment
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,13 +15,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ImportRssFeedsFragment : Fragment() {
 
-    private lateinit var mAddFromFileButton: View
+    private lateinit var addFromFileButton: View
     private val viewModel: ImportRssFeedViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_import_rss_feeds, container, false)
 
-        mAddFromFileButton = view.findViewById(R.id.import_from_file_button)
+        addFromFileButton = view.findViewById(R.id.import_from_file_button)
 
         return view
     }
@@ -42,7 +41,7 @@ class ImportRssFeedsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        mAddFromFileButton.setOnClickListener {
+        addFromFileButton.setOnClickListener {
             fun showFileChooser() {
                 val intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
                     .apply {
@@ -55,7 +54,7 @@ class ImportRssFeedsFragment : Fragment() {
                         Intent.createChooser(intent, getString(R.string.SELECT_A_FILE_TO_IMPORT)),
                         FILE_SELECT_REQUEST_CODE
                     )
-                } catch (e: ActivityNotFoundException) {
+                } catch (e: Throwable) {
                     // ignore
                 }
             }
@@ -67,7 +66,7 @@ class ImportRssFeedsFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
-        mAddFromFileButton.setOnClickListener(null)
+        addFromFileButton.setOnClickListener(null)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
