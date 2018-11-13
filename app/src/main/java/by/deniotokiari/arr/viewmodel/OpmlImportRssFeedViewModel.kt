@@ -14,7 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.InputStream
 
-class ImportRssFeedViewModel(private val context: Context, private val db: AppDatabase) : ViewModel() {
+class OpmlImportRssFeedViewModel(private val context: Context, private val db: AppDatabase) : ViewModel() {
 
     private var feeds: MutableLiveData<List<RssFeed>> = MutableLiveData()
     private var job: Job? = null
@@ -23,17 +23,17 @@ class ImportRssFeedViewModel(private val context: Context, private val db: AppDa
         job?.cancel()
     }
 
+    internal fun parseOpml(stream: InputStream?): List<RssFeed>? {
+        return null
+    }
+
     fun setFileUri(uri: Uri?) {
         fun getInputStream(context: Context, uri: Uri?): InputStream? = uri?.let { context.contentResolver.openInputStream(uri) }
-
-        fun parseXml(stream: InputStream?): List<RssFeed>? {
-            return null
-        }
 
         job?.cancel()
 
         job = GlobalScope.launch(bg) {
-            val result: List<RssFeed>? = parseXml(getInputStream(context, uri))
+            val result: List<RssFeed>? = parseOpml(getInputStream(context, uri))
 
             result?.also {
                 db.rssFeedDao().insert(it)

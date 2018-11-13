@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import by.deniotokiari.arr.R
-import by.deniotokiari.arr.viewmodel.ImportRssFeedViewModel
+import by.deniotokiari.arr.viewmodel.OpmlImportRssFeedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ImportRssFeedsFragment : Fragment() {
 
     private lateinit var addFromFileButton: View
-    private val viewModel: ImportRssFeedViewModel by viewModel()
+    private val viewModelOpml: OpmlImportRssFeedViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_import_rss_feeds, container, false)
@@ -29,7 +29,7 @@ class ImportRssFeedsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.getFeedsCount().observe(this, Observer {
+        viewModelOpml.getFeedsCount().observe(this, Observer {
             if (it == 0) {
 
             } else {
@@ -73,7 +73,7 @@ class ImportRssFeedsFragment : Fragment() {
         if (requestCode == FILE_SELECT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val uri: Uri? = data?.data
 
-            viewModel.setFileUri(uri)
+            viewModelOpml.setFileUri(uri)
         }
 
         super.onActivityResult(requestCode, resultCode, data)
