@@ -38,7 +38,8 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
                 xmlParser.setInput(ByteArrayInputStream(byteArray, 0, byteArray.size), null)
 
                 var eventType: Int = xmlParser.eventType
-                var depth: Int = 0
+                var depth = 0
+                var group: String? = null
 
                 while (eventType != XmlPullParser.END_DOCUMENT) {
                     when (eventType) {
