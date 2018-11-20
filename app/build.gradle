@@ -46,4 +46,8 @@ dependencies {
     testImplementation libs.robolectric
     testImplementation libs.junit
     testImplementation libs.testing_core
+
+    def mockito_version = '2.7.1' // For local unit tests on your development machine
+    testCompile "org.mockito:mockito-core:$mockito_version" // For instrumentation tests on Android devices and emulators
+    androidTestCompile "org.mockito:mockito-android:$mockito_version"
 }

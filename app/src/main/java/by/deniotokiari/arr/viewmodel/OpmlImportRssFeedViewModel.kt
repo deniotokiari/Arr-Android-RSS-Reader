@@ -12,6 +12,9 @@ import by.deniotokiari.core.coroutines.bg
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 
 class OpmlImportRssFeedViewModel(private val context: Context, private val db: AppDatabase) : ViewModel() {
@@ -24,7 +27,47 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
     }
 
     internal fun parseOpml(stream: InputStream?): List<RssFeed>? {
-        return null
+        return stream
+            ?.use { it.readBytes() }
+            ?.let { byteArray ->
+                val result: List<RssFeed> = ArrayList()
+
+                val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
+                val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
+
+                xmlParser.setInput(ByteArrayInputStream(byteArray, 0, byteArray.size), null)
+
+                var eventType: Int = xmlParser.eventType
+                var depth: Int = 0
+
+                while (eventType != XmlPullParser.END_DOCUMENT) {
+                    when (eventType) {
+                        XmlPullParser.START_TAG -> {
+                            val tagName: String = xmlParser.name
+
+                            when (tagName) {
+                                OUTLINE_TAG -> {
+                                    depth += 1
+                                }
+                            }
+                        }
+                        XmlPullParser.END_TAG -> {
+                            val tagName: String = xmlParser.name
+
+                            when (tagName) {
+                                OUTLINE_TAG -> {
+                                    depth -= 1
+                                }
+                            }
+                        }
+                    }
+
+                    xmlParser.next()
+                    eventType = xmlParser.eventType
+                }
+
+                result
+            }
     }
 
     fun setFileUri(uri: Uri?) {
@@ -44,5 +87,11 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
     }
 
     fun getFeedsCount(): LiveData<Int> = Transformations.map(feeds) { it?.size }
+
+    private companion object {
+
+        const val OUTLINE_TAG = "outline"
+
+    }
 
 }
