@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.RssFeed
+import by.deniotokiari.arr.extentsion.getAttribute
 import by.deniotokiari.core.coroutines.bg
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -30,7 +31,19 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
         return stream
             ?.use { it.readBytes() }
             ?.let { byteArray ->
-                val result: List<RssFeed> = ArrayList()
+                fun getRssFeed(xmlParser: XmlPullParser, group: String?): RssFeed? {
+                    val title: String? = xmlParser.getAttribute(ATTR_TITLE)
+                    val xmlUrl: String? = xmlParser.getAttribute(ATTR_XML_URL)
+                    val htmlUrl: String? = xmlParser.getAttribute(ATTR_HTML_URL)
+
+                    if (group != null && title != null && xmlUrl != null && htmlUrl != null) {
+                        return RssFeed(title, group, xmlUrl, htmlUrl)
+                    }
+
+                    return null
+                }
+
+                val result: ArrayList<RssFeed> = ArrayList()
 
                 val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
                 val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
@@ -38,7 +51,6 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
                 xmlParser.setInput(ByteArrayInputStream(byteArray, 0, byteArray.size), null)
 
                 var eventType: Int = xmlParser.eventType
-                var depth = 0
                 var group: String? = null
 
                 while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -47,8 +59,18 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
                             val tagName: String = xmlParser.name
 
                             when (tagName) {
-                                OUTLINE_TAG -> {
-                                    depth += 1
+                                TAG_OUTLINE -> {
+                                    if (xmlParser.depth == DEPTH_OUTLINE_GROUP) {
+                                        group = xmlParser.getAttribute(ATTR_TITLE)
+
+                                        val type: String? = xmlParser.getAttribute(ATTR_TYPE)
+
+                                        if (type == VAL_RSS) {
+                                            getRssFeed(xmlParser, "")?.also { result.add(it) }
+                                        }
+                                    } else if (xmlParser.depth == DEPTH_OUTLINE_FEED) {
+                                        getRssFeed(xmlParser, group)?.also { result.add(it) }
+                                    }
                                 }
                             }
                         }
@@ -56,8 +78,10 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
                             val tagName: String = xmlParser.name
 
                             when (tagName) {
-                                OUTLINE_TAG -> {
-                                    depth -= 1
+                                TAG_OUTLINE -> {
+                                    if (xmlParser.depth == DEPTH_OUTLINE_GROUP) {
+                                        group = null
+                                    }
                                 }
                             }
                         }
@@ -83,7 +107,7 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
                 db.rssFeedDao().insert(it)
             }
 
-            feeds.postValue(result)
+            feeds.value = result
         }
     }
 
@@ -91,7 +115,17 @@ class OpmlImportRssFeedViewModel(private val context: Context, private val db: A
 
     private companion object {
 
-        const val OUTLINE_TAG = "outline"
+        const val TAG_OUTLINE = "outline"
+
+        const val ATTR_TITLE = "title"
+        const val ATTR_XML_URL = "xmlUrl"
+        const val ATTR_HTML_URL = "htmlUrl"
+        const val ATTR_TYPE = "type"
+
+        const val VAL_RSS = "rss"
+
+        const val DEPTH_OUTLINE_GROUP = 3
+        const val DEPTH_OUTLINE_FEED = 4
 
     }
 

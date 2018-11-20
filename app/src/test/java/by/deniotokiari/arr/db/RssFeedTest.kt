@@ -31,7 +31,7 @@ class RssFeedTest : RoomDbBaseTest() {
 
     @Test
     fun create() {
-        val feed = RssFeed("Test Feed", "IT", "habr.com")
+        val feed = RssFeed("Test Feed", "IT", "habr.com", "habr.com")
 
         val id: Long = dao.insert(feed)
 
@@ -45,7 +45,7 @@ class RssFeedTest : RoomDbBaseTest() {
 
     @Test
     fun read() {
-        val feed = RssFeed("Test Feed", "IT", "habr.com")
+        val feed = RssFeed("Test Feed", "IT", "habr.com", "habr.com")
         dao.insert(ArrayList<RssFeed>(Arrays.asList(feed, feed, feed)))
 
         var feeds: List<RssFeed>? = dao.all().getValueBlocking()

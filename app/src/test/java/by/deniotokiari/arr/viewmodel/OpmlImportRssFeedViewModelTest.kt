@@ -22,12 +22,22 @@ class OpmlImportRssFeedViewModelTest {
 
         Assert.assertNotNull(stream)
 
-        val viewModel =
-            OpmlImportRssFeedViewModel(Mockito.mock(Context::class.java), Mockito.mock(AppDatabase::class.java))
+        val viewModel = OpmlImportRssFeedViewModel(Mockito.mock(Context::class.java), Mockito.mock(AppDatabase::class.java))
 
         val feeds: List<RssFeed>? = viewModel.parseOpml(stream)
 
         Assert.assertNotNull(feeds)
+        Assert.assertTrue(feeds?.isEmpty() == false)
+
+        val firstFeed: RssFeed = feeds!!.first()
+
+        Assert.assertEquals("Открытый космос Зеленого кота", firstFeed.title)
+        Assert.assertEquals("Science", firstFeed.group)
+
+        val lastFeed: RssFeed = feeds.last()
+
+        Assert.assertEquals("stalic", lastFeed.title)
+        Assert.assertEquals("", lastFeed.group)
     }
 
 }

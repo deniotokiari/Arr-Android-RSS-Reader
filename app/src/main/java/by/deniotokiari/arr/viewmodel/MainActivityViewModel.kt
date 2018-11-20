@@ -13,7 +13,6 @@ class MainActivityViewModel(private val db: AppDatabase) : ViewModel() {
 
     }
 
-    fun hasRssFeeds(): LiveData<Boolean> =
-        Transformations.map(db.rssFeedDao().all(1)) { feeds: List<RssFeed>? -> feeds?.isEmpty()?.not() }
+    fun hasRssFeeds(): LiveData<Boolean> = Transformations.map(db.rssFeedDao().all(1)) { feeds: List<RssFeed>? -> feeds?.isEmpty()?.not() }
 
 }
