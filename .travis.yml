@@ -25,5 +25,10 @@ android:
     - android-$ANDROID_API_LEVEL
     - build-tools-$ANDROID_BUILD_TOOLS
 
+licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+
 script:
     - ./gradlew clean test build
