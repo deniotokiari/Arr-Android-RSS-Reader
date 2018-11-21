@@ -36,7 +36,7 @@ class OpmlImportRssFeedViewModelTest {
 
         val lastFeed: RssFeed = feeds.last()
 
-        Assert.assertEquals("stalic1", lastFeed.title)
+        Assert.assertEquals("stalic", lastFeed.title)
         Assert.assertEquals("", lastFeed.group)
     }
 
