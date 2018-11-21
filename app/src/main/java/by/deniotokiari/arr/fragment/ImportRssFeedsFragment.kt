@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import by.deniotokiari.arr.R
@@ -30,14 +29,8 @@ class ImportRssFeedsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModelOpml.getFeedsCount().observe(this, Observer {
-            // Toast.makeText(context, "Feeds count: $it", Toast.LENGTH_LONG).show()
+        viewModelOpml.getRssFeeds().observe(this, Observer {
 
-            if (it == 0) {
-
-            } else {
-
-            }
         })
     }
 
@@ -76,7 +69,11 @@ class ImportRssFeedsFragment : Fragment() {
         if (requestCode == FILE_SELECT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val uri: Uri? = data?.data
 
-            viewModelOpml.setFileUri(uri)
+            if (uri == null) {
+
+            } else {
+                viewModelOpml.setUri(uri)
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data)

@@ -1,7 +1,7 @@
-package by.deniotokiari.arr.viewmodel
+package by.deniotokiari.arr.livedata
 
 import android.content.Context
-import by.deniotokiari.arr.db.AppDatabase
+import android.net.Uri
 import by.deniotokiari.arr.db.entity.RssFeed
 import org.junit.Assert
 import org.junit.Test
@@ -14,7 +14,7 @@ import java.io.InputStream
 
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
-class OpmlImportRssFeedViewModelTest {
+class OpmlToRssFeedParsingTest {
 
     @Test
     fun `opml file parsing to rss feed entities`() {
@@ -22,9 +22,9 @@ class OpmlImportRssFeedViewModelTest {
 
         Assert.assertNotNull(stream)
 
-        val viewModel = OpmlImportRssFeedViewModel(Mockito.mock(Context::class.java), Mockito.mock(AppDatabase::class.java))
+        val data = RssFeedFromOpmlLiveData(Mockito.mock(Context::class.java), Mockito.mock(Uri::class.java))
 
-        val feeds: List<RssFeed>? = viewModel.parseOpml(stream)
+        val feeds: List<RssFeed>? = data.parseOpml(stream)
 
         Assert.assertNotNull(feeds)
         Assert.assertTrue(feeds?.isEmpty() == false)
