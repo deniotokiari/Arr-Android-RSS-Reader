@@ -16,7 +16,10 @@ class FeedsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        childFragmentManager
+            .beginTransaction()
+            .replace(R.id.menu, MenuFragment())
+            .commit()
     }
 
 }

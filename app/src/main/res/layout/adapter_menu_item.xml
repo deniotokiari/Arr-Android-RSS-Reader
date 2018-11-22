@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="marquee"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:layout_toLeftOf="@+id/group_count_text_view"
+            tools:text="News"
+            android:layout_width="match_parent"
+            android:id="@+id/group_title_text_view"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/group_count_text_view"/>
+
+    <TextView
+            android:textSize="16sp"
+            android:padding="4dp"
+            tools:text="4"
+            android:id="@+id/group_count_text_view"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/group_items"
+            tools:listitem="@layout/adapter_menu_group_item"
+            android:padding="12dp"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_below="@+id/group_title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

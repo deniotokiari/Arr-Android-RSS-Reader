@@ -22,7 +22,7 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
         return stream
             ?.use { it.readBytes() }
             ?.let { byteArray ->
-                fun getRssFeed(xmlParser: XmlPullParser, group: String?): RssFeed? {
+                fun getRssFeed(xmlParser: XmlPullParser, group: String? = ""): RssFeed? {
                     val title: String? = xmlParser.getAttribute(ATTR_TITLE)
                     val xmlUrl: String? = xmlParser.getAttribute(ATTR_XML_URL)
                     val htmlUrl: String? = xmlParser.getAttribute(ATTR_HTML_URL)
@@ -57,7 +57,7 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
                                         val type: String? = xmlParser.getAttribute(ATTR_TYPE)
 
                                         if (type == VAL_RSS) {
-                                            getRssFeed(xmlParser, "")?.also { result.add(it) }
+                                            getRssFeed(xmlParser)?.also { result.add(it) }
                                         }
                                     } else if (xmlParser.depth == DEPTH_OUTLINE_FEED) {
                                         getRssFeed(xmlParser, group)?.also { result.add(it) }
