@@ -91,17 +91,13 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
     override fun onActive() {
         super.onActive()
 
+        job?.cancel()
+
         job = GlobalScope.launch(bg) {
             val result: List<RssFeed>? = parseOpml(getInputStream(context, uri))
 
             postValue(result)
         }
-    }
-
-    override fun onInactive() {
-        super.onInactive()
-
-        job?.cancel()
     }
 
     private companion object {

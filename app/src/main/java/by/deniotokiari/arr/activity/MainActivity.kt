@@ -18,10 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-    }
-
-    override fun onStart() {
-        super.onStart()
 
         viewModel.hasRssFeeds().observe(this, Observer { hasRssFeeds ->
             if (hasRssFeeds) {

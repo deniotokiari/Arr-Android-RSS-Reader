@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <Button android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
             android:id="@+id/import_from_file_button"
-            android:text="@string/IMPORT_FROM_FILE"
-    />
-</LinearLayout>
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:text="@string/IMPORT_FROM_FILE"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_above="@+id/import_feeds_button"
+            tools:listitem="@layout/adapter_rss_feed_item"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:padding="4dp"
+            android:id="@+id/rss_feeds_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <Button
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:text="@string/IMPORT_FEEDS_WITH_COUNT"
+            android:id="@+id/import_feeds_button"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>
