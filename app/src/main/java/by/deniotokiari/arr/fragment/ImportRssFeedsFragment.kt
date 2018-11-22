@@ -24,15 +24,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ImportRssFeedsFragment : Fragment() {
 
-    private val feedsToImport: ArrayList<RssFeed> by lazy { ArrayList<RssFeed>() }
-
     private lateinit var addFromFileButton: View
     private lateinit var importFeedsButton: Button
+    private lateinit var selectAllFeedsButton: Button
     private lateinit var rssFeedsRecyclerView: RecyclerView
 
     private val viewModelOpml: OpmlImportRssFeedViewModel by viewModel()
 
-    private fun initRecyclerView(recyclerView: RecyclerView, rssFeeds: List<RssFeed>, feedsToImport: ArrayList<RssFeed>) {
+    private fun initRecyclerView(recyclerView: RecyclerView, rssFeeds: List<RssFeed>) {
         class RssFeedItemViewHolder(root: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(R.layout.adapter_rss_feed_item, root, false)) {
 
             val feedImportCheckBox: CheckBox = itemView.findViewById(R.id.feed_import_check_box)
@@ -44,12 +43,14 @@ class ImportRssFeedsFragment : Fragment() {
                 val item: RssFeed = button.tag as RssFeed
 
                 if (isChecked) {
-                    feedsToImport.add(item)
+                    viewModelOpml.addFeedToImport(item)
                 } else {
-                    feedsToImport.remove(item)
+                    viewModelOpml.removeFeedToImport(item)
                 }
+            }
 
-                importFeedsButton.text = getString(R.string.IMPORT_FEEDS_WITH_COUNT, feedsToImport.size)
+            private val onClickListener: View.OnClickListener = View.OnClickListener {
+                (it.tag as CheckBox).performClick()
             }
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RssFeedItemViewHolder = RssFeedItemViewHolder(parent)
@@ -59,11 +60,13 @@ class ImportRssFeedsFragment : Fragment() {
             override fun onBindViewHolder(holder: RssFeedItemViewHolder, position: Int) {
                 val item: RssFeed = feeds[position]
 
+                holder.feedTitleTextView.tag = holder.feedImportCheckBox
                 holder.feedTitleTextView.text = item.title
+                holder.feedTitleTextView.setOnClickListener(onClickListener)
 
                 holder.feedImportCheckBox.tag = item
                 holder.feedImportCheckBox.setOnCheckedChangeListener(null)
-                holder.feedImportCheckBox.isChecked = feedsToImport.indexOf(item) != -1
+                holder.feedImportCheckBox.isChecked = viewModelOpml.containsFeedToImport(item)
                 holder.feedImportCheckBox.setOnCheckedChangeListener(onCheckedChangeListener)
             }
         }
@@ -77,7 +80,10 @@ class ImportRssFeedsFragment : Fragment() {
 
         addFromFileButton = view.findViewById(R.id.import_from_file_button)
         importFeedsButton = view.findViewById(R.id.import_feeds_button)
+        selectAllFeedsButton = view.findViewById(R.id.select_all_button)
         rssFeedsRecyclerView = view.findViewById(R.id.rss_feeds_recycler)
+
+        importFeedsButton.text = getString(R.string.IMPORT_FEEDS_WITH_COUNT, 0)
 
         return view
     }
@@ -92,18 +98,31 @@ class ImportRssFeedsFragment : Fragment() {
                 addFromFileButton.gone()
                 rssFeedsRecyclerView.visible()
 
-                feedsToImport.clear()
-
                 importFeedsButton.visible()
-                importFeedsButton.text = getString(R.string.IMPORT_FEEDS_WITH_COUNT, feedsToImport.size)
+                selectAllFeedsButton.visible()
 
-                initRecyclerView(rssFeedsRecyclerView, it, feedsToImport)
+                initRecyclerView(rssFeedsRecyclerView, it)
+            }
+        })
+        viewModelOpml.getFeedsToImport().observe(this, Observer {
+            it?.also { feeds ->
+                importFeedsButton.text = getString(R.string.IMPORT_FEEDS_WITH_COUNT, feeds.size)
+
+                val isEmpty: Boolean = feeds.isEmpty()
+
+                importFeedsButton.isEnabled = !isEmpty
+
+                if (isEmpty) {
+                    selectAllFeedsButton.text = getString(R.string.SELECT_ALL_FEEDS)
+                } else {
+                    selectAllFeedsButton.text = getString(R.string.CLEAR_SELECTION)
+                }
             }
         })
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         addFromFileButton.visible()
         addFromFileButton.setOnClickListener {
@@ -125,6 +144,16 @@ class ImportRssFeedsFragment : Fragment() {
             }
 
             showFileChooser()
+        }
+
+        selectAllFeedsButton.setOnClickListener {
+            viewModelOpml.addOrRemoveAllFeeds()
+
+            rssFeedsRecyclerView.adapter?.notifyDataSetChanged()
+        }
+
+        importFeedsButton.setOnClickListener {
+            viewModelOpml.importSelectedFeeds()
         }
     }
 
