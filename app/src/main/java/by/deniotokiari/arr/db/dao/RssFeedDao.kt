@@ -31,4 +31,7 @@ interface RssFeedDao {
     @Query("SELECT * FROM rssfeed WHERE `group` = :group")
     fun byGroup(group: String): LiveData<List<RssFeed>>
 
+    @Query("SELECT * FROM rssfeed ORDER BY `group`")
+    fun orderByGroup(): LiveData<List<RssFeed>>
+
 }
