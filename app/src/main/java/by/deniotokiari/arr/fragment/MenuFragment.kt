@@ -73,7 +73,7 @@ class MenuFragment : Fragment() {
             val item: RssFeed = items[position]
 
             holder.title.text = item.title
-            holder.count.text = 0.toString()
+            //holder.count.text = 0.toString()
         }
 
     }
@@ -146,7 +146,14 @@ class MenuFragment : Fragment() {
             val title: String = if (item.title.isEmpty()) uncategorized else item.title
 
             holder.groupTitle.text = title
-            holder.groupCount.text = item.count.toString()
+
+            val count = item.count
+
+            if (count > 0) {
+                holder.groupCount.text = count.toString()
+            } else {
+                holder.groupCount.text = ""
+            }
 
             if (expandedGroups.containsKey(item)) {
                 initGroupFeeds(holder.groupFeeds, item)

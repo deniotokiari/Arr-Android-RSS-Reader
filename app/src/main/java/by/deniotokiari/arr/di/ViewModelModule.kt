@@ -2,6 +2,7 @@ package by.deniotokiari.arr.di
 
 import by.deniotokiari.arr.viewmodel.OpmlImportRssFeedViewModel
 import by.deniotokiari.arr.viewmodel.MainActivityViewModel
+import by.deniotokiari.arr.viewmodel.MenuStateViewModel
 import by.deniotokiari.arr.viewmodel.MenuViewModel
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
@@ -14,5 +15,7 @@ fun viewModelModule(): Module = module {
     viewModel { OpmlImportRssFeedViewModel(get(), get()) }
 
     viewModel { MenuViewModel(get()) }
+
+    viewModel { MenuStateViewModel() }
 
 }
