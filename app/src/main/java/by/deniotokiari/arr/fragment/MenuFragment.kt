@@ -93,27 +93,42 @@ class MenuFragment : Fragment() {
 
     private class GroupAdapter(var items: ArrayList<MenuItem>?, private val uncategorized: String) : RecyclerView.Adapter<GroupViewHolder>() {
 
+        private val expandedGroups: HashMap<MenuItem, Boolean> = HashMap()
+
+        private fun initGroupFeeds(view: RecyclerView, item: MenuItem) {
+            val adapter = view.adapter as GroupFeedsAdapter
+
+            adapter.items.clear()
+
+            item.items?.also { adapter.items.addAll(it) }
+
+            adapter.notifyDataSetChanged()
+
+            view.visible()
+        }
+
+        private fun releaseGroupFeeds(view: RecyclerView) {
+            view.gone()
+
+            val adapter = view.adapter as GroupFeedsAdapter
+
+            adapter.items.clear()
+            adapter.notifyDataSetChanged()
+        }
+
         private val onClickListener: View.OnClickListener = View.OnClickListener {
             val pair: Pair<*, *> = it.tag as Pair<*, *>
-
             val groupFeeds: RecyclerView = pair.first as RecyclerView
-            val adapter: GroupFeedsAdapter = groupFeeds.adapter as GroupFeedsAdapter
+            val menuItem = pair.second as MenuItem
 
             if (groupFeeds.visibility == View.VISIBLE) {
-                groupFeeds.gone()
+                expandedGroups.remove(menuItem)
 
-                adapter.items.clear()
-                adapter.notifyDataSetChanged()
+                releaseGroupFeeds(groupFeeds)
             } else {
-                groupFeeds.visible()
+                expandedGroups[menuItem] = true
 
-                val item: MenuItem = pair.second as MenuItem
-
-                adapter.items.clear()
-
-                item.items?.also { items -> adapter.items.addAll(items) }
-
-                adapter.notifyDataSetChanged()
+                initGroupFeeds(groupFeeds, menuItem)
             }
         }
 
@@ -132,6 +147,12 @@ class MenuFragment : Fragment() {
 
             holder.groupTitle.text = title
             holder.groupCount.text = item.count.toString()
+
+            if (expandedGroups.containsKey(item)) {
+                initGroupFeeds(holder.groupFeeds, item)
+            } else {
+                releaseGroupFeeds(holder.groupFeeds)
+            }
         }
 
     }
