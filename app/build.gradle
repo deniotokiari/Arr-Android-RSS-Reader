@@ -40,6 +40,10 @@ dependencies {
     implementation libs.koin_scope
     implementation libs.koin_viewmodel
 
+    implementation libs.work_manager
+
+    implementation libs.okhttp
+
     kapt libs.lifecycle_compiler
     kapt libs.room_compiler
 

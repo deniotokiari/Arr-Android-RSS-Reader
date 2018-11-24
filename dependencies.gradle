@@ -29,6 +29,10 @@ ext.versions = [
         testing_core        : '1.1.1',
 
         mockito             : '2.23.4',
+
+        work_manager        : '1.0.0-alpha11',
+
+        okhttp              : '3.12.0',
 ]
 
 ext.gradlePlugins = [
@@ -66,5 +70,9 @@ ext.libs = [
         testing_core             : "android.arch.core:core-testing:$versions.testing_core",
 
         mockito_core             : "org.mockito:mockito-core:$versions.mockito",
-        mockito_android          : "org.mockito:mockito-android:$versions.mockito"
+        mockito_android          : "org.mockito:mockito-android:$versions.mockito",
+
+        work_manager             : "android.arch.work:work-runtime-ktx:$versions.work_manager",
+
+        okhttp                   : "com.squareup.okhttp3:okhttp:$versions.okhttp",
 ]

@@ -11,7 +11,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
-import java.io.ByteArrayInputStream
 import java.io.InputStream
 
 class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri) : LiveData<List<RssFeed>>() {
@@ -20,8 +19,7 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
 
     internal fun parseOpml(stream: InputStream?): List<RssFeed>? {
         return stream
-            ?.use { it.readBytes() }
-            ?.let { byteArray ->
+            ?.use { stream ->
                 fun getRssFeed(xmlParser: XmlPullParser, group: String? = ""): RssFeed? {
                     val title: String? = xmlParser.getAttribute(ATTR_TITLE)
                     val xmlUrl: String? = xmlParser.getAttribute(ATTR_XML_URL)
@@ -39,7 +37,7 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
                 val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
                 val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
 
-                xmlParser.setInput(ByteArrayInputStream(byteArray, 0, byteArray.size), null)
+                xmlParser.setInput(stream, null)
 
                 var eventType: Int = xmlParser.eventType
                 var group: String? = null

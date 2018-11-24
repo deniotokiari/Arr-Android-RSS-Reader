@@ -11,7 +11,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.InputStream
 
-
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
 class OpmlToRssFeedParsingTest {

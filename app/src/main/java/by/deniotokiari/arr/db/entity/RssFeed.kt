@@ -9,6 +9,7 @@ data class RssFeed(
     var group: String,
     var source: String,
     var page: String,
+    var icon: String? = null,
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 )
