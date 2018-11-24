@@ -157,12 +157,6 @@ class ImportRssFeedsFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        addFromFileButton.setOnClickListener(null)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == FILE_SELECT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val uri: Uri? = data?.data
