@@ -15,4 +15,7 @@ interface ArticleDao {
     @Query("SELECT * FROM article")
     fun all(): LiveData<List<Article>>
 
+    @Query("SELECT COUNT(*) FROM article WHERE feed_id = :feedId AND read = :read")
+    fun articlesCount(feedId: Long, read: Boolean): Int
+
 }

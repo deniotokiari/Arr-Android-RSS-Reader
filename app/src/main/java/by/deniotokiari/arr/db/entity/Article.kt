@@ -23,5 +23,6 @@ data class Article(
     var date: String?,
     var creator: String?,
     @PrimaryKey(autoGenerate = true)
-    var id: Long? = null
+    var id: Long? = null,
+    var read: Boolean = false
 )

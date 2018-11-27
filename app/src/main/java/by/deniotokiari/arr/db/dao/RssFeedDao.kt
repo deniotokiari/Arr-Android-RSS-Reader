@@ -28,12 +28,17 @@ interface RssFeedDao {
     @Query("SELECT * FROM rssfeed WHERE `group` = :group")
     fun feedsByGroup(group: String): List<RssFeed>
 
-    @Query("SELECT `group` AS title FROM rssfeed GROUP BY `group` ORDER BY `group`")
+    @Query("SELECT `group` AS title, id AS feedId FROM rssfeed GROUP BY `group` ORDER BY `group`")
     fun groups(): LiveData<List<RssGroup>>
 
     @Query("SELECT * FROM rssfeed WHERE id = :id")
     fun feedById(id: Long): RssFeed?
 
+    @Query("SELECT id FROM rssfeed")
+    fun allFeedsId(): List<FeedId>
+
 }
 
-data class RssGroup(val title: String)
+data class RssGroup(val title: String, val feedId: Long)
+
+data class FeedId(val id: Long)

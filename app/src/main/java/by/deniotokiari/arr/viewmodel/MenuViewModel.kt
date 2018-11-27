@@ -8,6 +8,7 @@ import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.core.coroutines.bg
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MenuViewModel(private val db: AppDatabase) : ViewModel() {
@@ -17,7 +18,10 @@ class MenuViewModel(private val db: AppDatabase) : ViewModel() {
     fun getMenuItems(): LiveData<List<MenuItem>> = Transformations.switchMap(db.rssFeedDao().groups()) {
         GlobalScope.launch(bg) {
             menuItems.postValue(it.map { item ->
-                MenuItem(title = item.title, items = db.rssFeedDao().feedsByGroup(item.title))
+                val items: List<RssFeed>? = async(bg) { db.rssFeedDao().feedsByGroup(item.title) }.await()
+                val count: Int = async(bg) { db.articleDao().articlesCount(item.feedId, false) }.await()
+
+                MenuItem(title = item.title, items = items, count = count)
             })
         }
 

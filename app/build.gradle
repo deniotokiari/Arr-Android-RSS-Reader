@@ -44,6 +44,9 @@ dependencies {
 
     implementation libs.okhttp
 
+    implementation libs.glide
+    annotationProcessor libs.glide_compiler
+
     kapt libs.lifecycle_compiler
     kapt libs.room_compiler
 

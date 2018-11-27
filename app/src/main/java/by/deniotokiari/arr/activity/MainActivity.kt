@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.hasRssFeeds().observe(this, Observer { hasRssFeeds ->
             if (hasRssFeeds) {
+                viewModel.loadArticles()
+
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.content, FeedsFragment())

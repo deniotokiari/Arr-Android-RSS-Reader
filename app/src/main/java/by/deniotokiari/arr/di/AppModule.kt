@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import by.deniotokiari.arr.db.AppDatabase
+import com.bumptech.glide.Glide
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
@@ -15,6 +16,8 @@ fun appModule(): Module = module {
     single { Room.databaseBuilder(get(), AppDatabase::class.java, APP_DATABASE).build() }
 
     single { OkHttpClient() }
+
+    single { Glide.with(get<Context>()) }
 
 }
 
