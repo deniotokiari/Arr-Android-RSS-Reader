@@ -12,6 +12,9 @@ interface ArticleDao {
     @Insert
     fun insert(article: Article): Long
 
+    @Insert
+    fun insert(article: List<Article>): LongArray
+
     @Query("SELECT * FROM article")
     fun all(): LiveData<List<Article>>
 

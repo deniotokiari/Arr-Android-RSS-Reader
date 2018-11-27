@@ -1,11 +1,10 @@
 package by.deniotokiari.arr.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.RssFeed
@@ -16,24 +15,39 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel(private val db: AppDatabase) : ViewModel() {
 
-    fun hasRssFeeds(): LiveData<Boolean> = Transformations.map(db.rssFeedDao().all(1)) { feeds: List<RssFeed>? -> feeds?.isEmpty()?.not() }
+    private val hasFeedsLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val feedsLiveData: LiveData<List<RssFeed>> = db.rssFeedDao().all(1)
+    private val observer: Observer<List<RssFeed>> = Observer {
+        val isEmpty: Boolean = it.isEmpty()
+
+        if (!isEmpty && hasFeedsLiveData.value == false) {
+            hasFeedsLiveData.value = true
+        }
+    }
+
+    fun hasRssFeeds(): LiveData<Boolean> {
+        feedsLiveData.observeForever(observer)
+
+        hasFeedsLiveData.value = false
+
+        return hasFeedsLiveData
+    }
 
     fun loadArticles() {
         GlobalScope.launch(bg) {
             val requests: List<OneTimeWorkRequest> = db
                 .rssFeedDao()
                 .allFeedsId()
-                .map { item ->
-                    val data: Data = Data.Builder()
-                        .putLong(ArticlesFetchAndCacheWorker.FEED_ID, item.id)
-                        .build()
-                    OneTimeWorkRequestBuilder<ArticlesFetchAndCacheWorker>()
-                        .setInputData(data)
-                        .build()
-                }
+                .map { item -> ArticlesFetchAndCacheWorker.getOneTimeRequest(item.id) }
 
             WorkManager.getInstance().enqueue(requests)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        feedsLiveData.removeObserver(observer)
     }
 
 }

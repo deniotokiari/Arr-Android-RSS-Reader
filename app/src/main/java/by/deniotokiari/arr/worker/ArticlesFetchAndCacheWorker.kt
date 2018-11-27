@@ -1,8 +1,8 @@
 package by.deniotokiari.arr.worker
 
 import android.content.Context
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import android.util.Log
+import androidx.work.*
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
@@ -18,20 +18,34 @@ import java.io.InputStream
 class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
 
     override fun doWork(): Result = inputData
-        .getString(FEED_ID)
-        ?.toLong()
-        ?.let { id ->
+        .getLong(FEED_ID, DEFAULT_FEED_ID)
+        .let { id ->
+            if (id == DEFAULT_FEED_ID) {
+                return Result.FAILURE
+            }
+
             val http: OkHttpClient by inject()
             val db: AppDatabase by inject()
 
             val feed: RssFeed? = getFeedById(id, db)
             val stream: InputStream? = getFeedArticlesInputStream(http, feed?.source)
 
-            parseXml(stream, feed, db)
-        }
-        ?: Result.FAILURE
+            try {
+                val articles: List<Article>? = parseXml(stream, feed, db)
 
-    internal fun parseXml(stream: InputStream?, feed: RssFeed?, db: AppDatabase): Result = stream
+                articles?.also { db.articleDao().insert(articles) }
+
+                Log.d("LOG", "${feed?.source}: ${articles?.size}")
+
+                Result.SUCCESS
+            } catch (e: Exception) {
+                Log.e("LOG", "${feed?.source}")
+
+                Result.FAILURE
+            }
+        }
+
+    internal fun parseXml(stream: InputStream?, feed: RssFeed?, db: AppDatabase): List<Article>? = stream
         ?.use {
             val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
             val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
@@ -39,6 +53,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
             xmlParser.setInput(it, null)
 
             var eventType: Int = xmlParser.eventType
+            val result: ArrayList<Article> = ArrayList()
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 when (eventType) {
@@ -47,7 +62,11 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
                         when (tagName) {
                             IMAGE -> updateFeedIcon(xmlParser, feed, db)
-                            ITEM -> saveFeedItem(xmlParser, feed, db)
+                            ITEM -> {
+                                val article: Article? = getFeedItem(xmlParser, feed)
+
+                                article?.also { item -> result.add(item) }
+                            }
                         }
                     }
                 }
@@ -56,9 +75,8 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                 eventType = xmlParser.eventType
             }
 
-            Result.SUCCESS
+            result
         }
-        ?: Result.FAILURE
 
     private fun getFeedById(id: Long, db: AppDatabase): RssFeed? = db.rssFeedDao().feedById(id)
 
@@ -97,7 +115,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         }
     }
 
-    private fun saveFeedItem(xmlParser: XmlPullParser, feed: RssFeed?, db: AppDatabase) {
+    private fun getFeedItem(xmlParser: XmlPullParser, feed: RssFeed?): Article? {
         xmlParser.next()
 
         var tagName: String? = xmlParser.name
@@ -162,7 +180,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
             tagName = xmlParser.name
         }
 
-        if (title != null && description != null) {
+        return if (title != null && description != null) {
             val article = Article(
                 title = title,
                 description = description,
@@ -173,7 +191,9 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                 creator = creator
             )
 
-            db.articleDao().insert(article)
+            article
+        } else {
+            null
         }
     }
 
@@ -190,6 +210,14 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         private const val DATE = "pubDate"
         private const val CREATOR = "dc:creator"
         private const val CATEGORY = "category"
+
+        private const val DEFAULT_FEED_ID = -1L
+
+        fun getOneTimeRequest(id: Long): OneTimeWorkRequest {
+            val data: Data = Data.Builder().putLong(FEED_ID, id).build()
+
+            return OneTimeWorkRequestBuilder<ArticlesFetchAndCacheWorker>().setInputData(data).build()
+        }
 
     }
 
