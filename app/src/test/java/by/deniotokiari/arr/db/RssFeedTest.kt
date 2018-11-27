@@ -19,9 +19,6 @@ import java.util.*
 @Config(manifest = Config.NONE)
 class RssFeedTest : RoomDbBaseTest() {
 
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
-
     private lateinit var dao: RssFeedDao
 
     @Before

@@ -3,7 +3,10 @@ package by.deniotokiari.arr.worker
 import android.content.Context
 import androidx.work.WorkerParameters
 import by.deniotokiari.arr.db.RoomDbBaseTest
+import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
+import by.deniotokiari.arr.getValueBlocking
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
@@ -17,15 +20,36 @@ class ArticlesFetchAndCacheWorkerTest : RoomDbBaseTest() {
 
     @Test
     fun `rss feed parsing and processing`() {
-        return
+        val feed = RssFeed(
+            "Test",
+            "IT",
+            "habr.com",
+            "habr.com"
+        )
+
+        val id: Long = db.rssFeedDao().insert(feed)
+
+        Assert.assertNotNull(id)
+
+        val feedFromDb: RssFeed? = db.rssFeedDao().all().getValueBlocking()?.first()
+
+        Assert.assertNotNull(feedFromDb)
 
         val worker = ArticlesFetchAndCacheWorker(Mockito.mock(Context::class.java), Mockito.mock(WorkerParameters::class.java))
         val stream: InputStream? = javaClass.classLoader?.getResourceAsStream("feed/habr.com")
-        val feed: RssFeed = Mockito.mock(RssFeed::class.java)
 
-        Mockito.`when`(feed.id).thenReturn(42L)
+        worker.parseXml(stream, feedFromDb, db)
 
-        worker.parseXml(stream, feed, db)
+        val articles: List<Article>? = db.articleDao().all().getValueBlocking()
+
+        Assert.assertNotNull(articles)
+        Assert.assertEquals(20, articles?.size)
+
+        val updatedFeed: RssFeed? = db.rssFeedDao().feedById(id)
+
+        Assert.assertNotNull(updatedFeed)
+        Assert.assertNotNull(updatedFeed?.icon)
+        Assert.assertEquals("https://habr.com/images/logo.png", updatedFeed?.icon)
     }
 
 }

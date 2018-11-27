@@ -11,6 +11,9 @@ import org.robolectric.RuntimeEnvironment
 
 open class RoomDbBaseTest {
 
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
+
     lateinit var db: AppDatabase
 
     @Before
