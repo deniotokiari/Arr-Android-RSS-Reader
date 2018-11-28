@@ -26,21 +26,24 @@ class MainActivityViewModel(private val db: AppDatabase) : ViewModel() {
     }
 
     fun hasRssFeeds(): LiveData<Boolean> {
-        feedsLiveData.observeForever(observer)
-
         hasFeedsLiveData.value = false
+
+        feedsLiveData.observeForever(observer)
 
         return hasFeedsLiveData
     }
 
     fun loadArticles() {
         GlobalScope.launch(bg) {
-            val requests: List<OneTimeWorkRequest> = db
+            val ids: LongArray = db
                 .rssFeedDao()
                 .allFeedsId()
-                .map { item -> ArticlesFetchAndCacheWorker.getOneTimeRequest(item.id) }
+                .map { item -> item.id }
+                .toLongArray()
 
-            WorkManager.getInstance().enqueue(requests)
+            if (ids.isNotEmpty()) {
+                WorkManager.getInstance().enqueue(ArticlesFetchAndCacheWorker.getOneTimeRequest(ids))
+            }
         }
     }
 

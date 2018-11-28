@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.deniotokiari.arr.R
@@ -46,14 +47,45 @@ class MenuFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
 
-        menuViewModel.getMenuItems().observe(this, Observer {
-            val items: ArrayList<MenuItem>? = (menuRecyclerView.adapter as GroupAdapter?)?.items
+        menuViewModel.getMenuItems().observe(this, Observer { newItems ->
+            val oldItems: ArrayList<MenuItem>? = (menuRecyclerView.adapter as GroupAdapter?)?.items
 
-            items?.clear()
-            items?.addAll(it)
+            oldItems?.also {
+                // TODO move to view model
+                val diffUtilCallback = MenuItemsDiffUtilCallback(newItems, oldItems)
+                val diffUtilResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtilCallback)
 
-            menuRecyclerView.adapter?.notifyDataSetChanged()
+                oldItems.clear()
+                oldItems.addAll(newItems)
+
+                menuRecyclerView.adapter?.also { adapter ->
+                    diffUtilResult.dispatchUpdatesTo(adapter)
+                }
+            }
         })
+    }
+
+    private class MenuItemsDiffUtilCallback(val newItems: List<MenuItem>, val oldItems: List<MenuItem>) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem: MenuItem = oldItems[oldItemPosition]
+            val newItem: MenuItem = newItems[newItemPosition]
+
+            return oldItem.title == newItem.title
+        }
+
+        override fun getOldListSize(): Int = oldItems.size
+
+        override fun getNewListSize(): Int = newItems.size
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem: MenuItem = oldItems[oldItemPosition]
+            val newItem: MenuItem = newItems[newItemPosition]
+
+            return oldItem.count == newItem.count
+                    && oldItem.image == newItem.image
+                    && oldItem.count == newItem.count
+                    && oldItem.items?.size == newItem.items?.size
+        }
     }
 
     private class GroupFeedsViewHolder(root: ViewGroup) : RecyclerView.ViewHolder(LayoutInflater.from(root.context).inflate(R.layout.adapter_menu_group_item, root, false)) {
