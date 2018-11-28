@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.deniotokiari.arr.R
 import by.deniotokiari.arr.db.entity.RssFeed
+import by.deniotokiari.arr.viewmodel.Feed
 import by.deniotokiari.arr.viewmodel.MenuItem
 import by.deniotokiari.arr.viewmodel.MenuViewModel
 import by.deniotokiari.core.extensions.gone
@@ -40,7 +41,7 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         menuRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        menuRecyclerView.adapter = GroupAdapter(ArrayList(), getString(R.string.UNCATEGORIZED), glide)
+        menuRecyclerView.adapter = GroupAdapter(ArrayList(), glide)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,21 +99,30 @@ class MenuFragment : Fragment() {
 
     private class GroupFeedsAdapter(private val glide: RequestManager) : RecyclerView.Adapter<GroupFeedsViewHolder>() {
 
-        val items: ArrayList<RssFeed> = ArrayList()
+        val items: ArrayList<Feed> = ArrayList()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupFeedsViewHolder = GroupFeedsViewHolder(parent)
 
         override fun getItemCount(): Int = items.size
 
         override fun onBindViewHolder(holder: GroupFeedsViewHolder, position: Int) {
-            val item: RssFeed = items[position]
+            val item: Feed = items[position]
+            val feed: RssFeed = item.feed
 
-            holder.title.text = item.title
+            holder.title.text = feed.title
 
-            item.icon?.also {
+            feed.icon?.also {
                 glide
                     .load(it)
                     .into(holder.icon)
+            }
+
+            val count: Int = item.count
+
+            if (count == 0) {
+                holder.count.text = ""
+            } else {
+                holder.count.text = count.toString()
             }
         }
 
@@ -131,9 +141,9 @@ class MenuFragment : Fragment() {
 
     }
 
-    private class GroupAdapter(var items: ArrayList<MenuItem>?, private val uncategorized: String, private val glide: RequestManager) : RecyclerView.Adapter<GroupViewHolder>() {
+    private class GroupAdapter(var items: ArrayList<MenuItem>?, private val glide: RequestManager) : RecyclerView.Adapter<GroupViewHolder>() {
 
-        private val expandedGroups: HashMap<MenuItem, Boolean> = HashMap()
+        private val expandedGroups: HashMap<String, Boolean> = HashMap()
 
         private fun initGroupFeeds(view: RecyclerView, item: MenuItem) {
             val adapter = view.adapter as GroupFeedsAdapter
@@ -162,11 +172,11 @@ class MenuFragment : Fragment() {
             val menuItem = pair.second as MenuItem
 
             if (groupFeeds.visibility == View.VISIBLE) {
-                expandedGroups.remove(menuItem)
+                expandedGroups.remove(menuItem.title)
 
                 releaseGroupFeeds(groupFeeds)
             } else {
-                expandedGroups[menuItem] = true
+                expandedGroups[menuItem.title] = true
 
                 initGroupFeeds(groupFeeds, menuItem)
             }
@@ -183,19 +193,17 @@ class MenuFragment : Fragment() {
 
             holder.itemView.tag = Pair(holder.groupFeeds, item)
 
-            val title: String = if (item.title.isEmpty()) uncategorized else item.title
-
-            holder.groupTitle.text = title
+            holder.groupTitle.text = item.title
 
             val count = item.count
 
-            if (count > 0) {
-                holder.groupCount.text = count.toString()
-            } else {
+            if (count == 0) {
                 holder.groupCount.text = ""
+            } else {
+                holder.groupCount.text = count.toString()
             }
 
-            if (expandedGroups.containsKey(item)) {
+            if (expandedGroups.containsKey(item.title)) {
                 initGroupFeeds(holder.groupFeeds, item)
             } else {
                 releaseGroupFeeds(holder.groupFeeds)

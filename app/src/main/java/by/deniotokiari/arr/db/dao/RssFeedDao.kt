@@ -25,7 +25,7 @@ interface RssFeedDao {
     @Query("SELECT * FROM rssfeed LIMIT :limit")
     fun all(limit: Int): LiveData<List<RssFeed>>
 
-    @Query("SELECT * FROM rssfeed WHERE `group` = :group")
+    @Query("SELECT * FROM rssfeed WHERE `group` = :group ORDER BY title")
     fun feedsByGroup(group: String): List<RssFeed>
 
     @Query("SELECT `group` AS title, id AS feedId FROM rssfeed GROUP BY `group` ORDER BY `group`")

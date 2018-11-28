@@ -5,10 +5,11 @@
     <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/icon"
+            android:padding="2dp"
             android:layout_margin="4dp"
             tools:background="@color/colorAccent"
-            android:layout_width="24dp"
-            android:layout_height="24dp"/>
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
 
     <TextView
             android:singleLine="true"

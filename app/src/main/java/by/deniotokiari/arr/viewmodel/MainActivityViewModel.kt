@@ -35,14 +35,13 @@ class MainActivityViewModel(private val db: AppDatabase) : ViewModel() {
 
     fun loadArticles() {
         GlobalScope.launch(bg) {
-            val ids: LongArray = db
+            val requests: List<OneTimeWorkRequest> = db
                 .rssFeedDao()
                 .allFeedsId()
-                .map { item -> item.id }
-                .toLongArray()
+                .map { item -> ArticlesFetchAndCacheWorker.getOneTimeRequest(item.id) }
 
-            if (ids.isNotEmpty()) {
-                WorkManager.getInstance().enqueue(ArticlesFetchAndCacheWorker.getOneTimeRequest(ids))
+            if (requests.isNotEmpty()) {
+                WorkManager.getInstance().enqueue(requests)
             }
         }
     }

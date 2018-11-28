@@ -3,22 +3,26 @@ package by.deniotokiari.arr.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import by.deniotokiari.arr.db.entity.Article
 
 @Dao
 interface ArticleDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(article: Article): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(article: List<Article>): LongArray
 
     @Query("SELECT * FROM article")
     fun all(): LiveData<List<Article>>
 
-    @Query("SELECT COUNT(*) FROM article WHERE feed_id = :feedId AND read = :read")
-    fun articlesCount(feedId: Long, read: Boolean): Int
+    @Query("SELECT COUNT(*) from article AS article, rssfeed AS feed WHERE feed.`group` = :group AND article.feed_id = feed.id AND article.read = :read")
+    fun countByGroup(group: String, read: Boolean): Int
+
+    @Query("SELECT COUNT(*) FROM article WHERE feed_id = :id")
+    fun countByGroupId(id: Long?): Int
 
 }

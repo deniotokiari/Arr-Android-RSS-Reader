@@ -11,18 +11,25 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class MenuViewModel(private val db: AppDatabase) : ViewModel() {
+class MenuViewModel(private val db: AppDatabase, private val uncategorized: String) : ViewModel() {
 
     private val menuItems: MutableLiveData<List<MenuItem>> = MutableLiveData()
 
     fun getMenuItems(): LiveData<List<MenuItem>> = Transformations.switchMap(db.rssFeedDao().groups()) {
         GlobalScope.launch(bg) {
-            menuItems.postValue(it.map { item ->
-                val items: List<RssFeed>? = async(bg) { db.rssFeedDao().feedsByGroup(item.title) }.await()
-                val count: Int = async(bg) { db.articleDao().articlesCount(item.feedId, false) }.await()
+            menuItems.postValue(
+                it
+                    .map { item ->
+                        val items: List<RssFeed>? = async(bg) { db.rssFeedDao().feedsByGroup(item.title) }.await()
+                        val count: Int = async(bg) { db.articleDao().countByGroup(item.title, false) }.await()
+                        val feedItems: List<Feed>? = items
+                            ?.map { feed -> Feed(feed, db.articleDao().countByGroupId(feed.id)) }
 
-                MenuItem(title = item.title, items = items, count = count)
-            })
+                        val title: String = if (item.title.isEmpty()) uncategorized else item.title
+
+                        MenuItem(title = title, items = feedItems, count = count)
+                    }
+            )
         }
 
         menuItems
@@ -34,5 +41,10 @@ data class MenuItem(
     val title: String,
     val count: Int = 0,
     val image: String? = null,
-    val items: List<RssFeed>? = null
+    val items: List<Feed>? = null
+)
+
+data class Feed(
+    val feed: RssFeed,
+    val count: Int
 )

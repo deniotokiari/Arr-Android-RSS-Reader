@@ -18,22 +18,19 @@ import java.io.InputStream
 class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
 
     override fun doWork(): Result = inputData
-        .getLongArray(FEEDS_ID)
-        .also { ids ->
+        .getLong(FEED_ID, DEFAULT_FEED_ID)
+        .let { id ->
+            if (id == DEFAULT_FEED_ID) {
+                return Result.FAILURE
+            }
+
             val http: OkHttpClient by inject()
             val db: AppDatabase by inject()
 
-            ids?.forEach { id ->
-                if (isStopped) {
-                    return@also
-                }
-
-                processFeed(id, http, db)
-            }
+            processFeed(id, http, db)
         }
-        .let { Result.SUCCESS }
 
-    private fun processFeed(id: Long, http: OkHttpClient, db: AppDatabase) {
+    private fun processFeed(id: Long, http: OkHttpClient, db: AppDatabase): Result {
         var feed: RssFeed? = null
 
         try {
@@ -52,10 +49,14 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                 db.articleDao().insert(articles)
 
                 Log.d("LOG", "${feed?.source}: ${articles.size}")
+
+                return Result.SUCCESS
             }
         } catch (e: Exception) {
             Log.e("LOG", "${feed?.source}: ${e.message}")
         }
+
+        return Result.FAILURE
     }
 
     internal fun parseXml(stream: InputStream?, feed: RssFeed?): FeedXmlResult? = stream
@@ -216,7 +217,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
     companion object {
 
-        const val FEEDS_ID = "ArticlesFetchAndCacheWorker:FEEDS_ID"
+        const val FEED_ID = "ArticlesFetchAndCacheWorker:FEED_ID"
 
         private const val IMAGE = "image"
         private const val URL = "url"
@@ -228,8 +229,10 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         private const val CREATOR = "dc:creator"
         private const val CATEGORY = "category"
 
-        fun getOneTimeRequest(ids: LongArray): OneTimeWorkRequest {
-            val data: Data = Data.Builder().putLongArray(FEEDS_ID, ids).build()
+        private const val DEFAULT_FEED_ID = -1L
+
+        fun getOneTimeRequest(id: Long): OneTimeWorkRequest {
+            val data: Data = Data.Builder().putLong(FEED_ID, id).build()
 
             return OneTimeWorkRequestBuilder<ArticlesFetchAndCacheWorker>().setInputData(data).build()
         }
