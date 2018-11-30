@@ -66,6 +66,31 @@ class MenuFragment : Fragment() {
         })
     }
 
+    private class FeedItemsDiffUtilCallback(val newItems: List<Feed>, val oldItems: List<Feed>) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem: Feed = oldItems[oldItemPosition]
+            val newItem: Feed = newItems[newItemPosition]
+
+            return oldItem.feed.title == newItem.feed.title
+        }
+
+        override fun getOldListSize(): Int = oldItems.size
+
+        override fun getNewListSize(): Int = newItems.size
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem: Feed = oldItems[oldItemPosition]
+            val newItem: Feed = newItems[newItemPosition]
+
+            return oldItem.count == newItem.count
+                    && oldItem.feed.group == newItem.feed.group
+                    && oldItem.feed.title == newItem.feed.title
+                    && oldItem.feed.icon == newItem.feed.icon
+                    && oldItem.feed.id == newItem.feed.id
+                    && oldItem.feed.source == newItem.feed.source
+        }
+    }
+
     private class MenuItemsDiffUtilCallback(val newItems: List<MenuItem>, val oldItems: List<MenuItem>) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem: MenuItem = oldItems[oldItemPosition]

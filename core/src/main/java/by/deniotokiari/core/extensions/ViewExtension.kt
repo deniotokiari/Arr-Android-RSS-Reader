@@ -3,13 +3,19 @@ package by.deniotokiari.core.extensions
 import android.view.View
 
 fun View.visible() {
-    visibility = View.VISIBLE
+    if (visibility != View.VISIBLE) {
+        visibility = View.VISIBLE
+    }
 }
 
 fun View.invisible() {
-    visibility = View.INVISIBLE
+    if (visibility != View.INVISIBLE) {
+        visibility = View.INVISIBLE
+    }
 }
 
 fun View.gone() {
-    visibility = View.GONE
+    if (visibility != View.GONE) {
+        visibility = View.GONE
+    }
 }
