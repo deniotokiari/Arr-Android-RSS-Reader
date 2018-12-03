@@ -2,10 +2,7 @@ package by.deniotokiari.arr.di
 
 import android.content.Context
 import by.deniotokiari.arr.R
-import by.deniotokiari.arr.viewmodel.MainActivityViewModel
-import by.deniotokiari.arr.viewmodel.MenuStateViewModel
-import by.deniotokiari.arr.viewmodel.MenuViewModel
-import by.deniotokiari.arr.viewmodel.OpmlImportRssFeedViewModel
+import by.deniotokiari.arr.viewmodel.*
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
@@ -19,5 +16,7 @@ fun viewModelModule(): Module = module {
     viewModel { MenuViewModel(get(), get<Context>().getString(R.string.UNCATEGORIZED)) }
 
     viewModel { MenuStateViewModel() }
+
+    viewModel { LastArticlesViewModel(get()) }
 
 }

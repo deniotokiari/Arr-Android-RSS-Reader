@@ -55,6 +55,7 @@ class FeedsFragment : Fragment() {
         childFragmentManager
             .beginTransaction()
             .replace(R.id.menu, MenuFragment())
+            .replace(R.id.content, LastArticlesFragment())
             .commit()
     }
 

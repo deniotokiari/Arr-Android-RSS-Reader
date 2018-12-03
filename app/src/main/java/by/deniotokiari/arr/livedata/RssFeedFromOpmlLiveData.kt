@@ -19,7 +19,7 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
 
     internal fun parseOpml(stream: InputStream?): List<RssFeed>? {
         return stream
-            ?.use { stream ->
+            ?.use { data ->
                 fun getRssFeed(xmlParser: XmlPullParser, group: String? = ""): RssFeed? {
                     val title: String? = xmlParser.getAttribute(ATTR_TITLE)
                     val xmlUrl: String? = xmlParser.getAttribute(ATTR_XML_URL)
@@ -37,7 +37,7 @@ class RssFeedFromOpmlLiveData(private val context: Context, private val uri: Uri
                 val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
                 val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
 
-                xmlParser.setInput(stream, null)
+                xmlParser.setInput(data, null)
 
                 var eventType: Int = xmlParser.eventType
                 var group: String? = null
