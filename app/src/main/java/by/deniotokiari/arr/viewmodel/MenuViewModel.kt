@@ -4,43 +4,74 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DiffUtil
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.core.coroutines.bg
+import by.deniotokiari.core.extensions.pmap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.util.concurrent.CopyOnWriteArrayList
 
 class MenuViewModel(private val db: AppDatabase, private val uncategorized: String) : ViewModel() {
 
+    private val previousMenuItems: CopyOnWriteArrayList<MenuItem> = CopyOnWriteArrayList()
     private val menuItems: MutableLiveData<List<MenuItem>> = MutableLiveData()
 
     fun getMenuItems(): LiveData<List<MenuItem>> = Transformations.switchMap(db.rssFeedDao().groups()) {
         GlobalScope.launch(bg) {
-            menuItems.postValue(
-                it
-                    .map { item ->
-                        val items: List<RssFeed>? = async(bg) { db.rssFeedDao().feedsByGroup(item.title) }.await()
-                        val count: Int = async(bg) { db.articleDao().countByGroup(item.title, false) }.await()
-                        val feedItems: List<Feed>? = items
-                            ?.map { feed -> Feed(feed, db.articleDao().countByGroupId(feed.id)) }
+            val result: List<MenuItem> = it
+                .pmap { item ->
+                    val items: List<RssFeed>? = async(bg) { db.rssFeedDao().feedsByGroup(item.title) }.await()
+                    val count: Int = async(bg) { db.articleDao().countByGroup(item.title, false) }.await()
+                    val feedItems: List<Feed>? = items?.pmap { feed -> Feed(feed, db.articleDao().countByGroupId(feed.id)) }
+                    val title: String = if (item.title.isEmpty()) uncategorized else item.title
 
-                        val title: String = if (item.title.isEmpty()) uncategorized else item.title
+                    MenuItem(title = title, items = feedItems, count = count)
+                }
 
-                        MenuItem(title = title, items = feedItems, count = count)
-                    }
-            )
+            previousMenuItems.clear()
+            menuItems.value?.also { previous -> previousMenuItems.addAll(previous) }
+
+            menuItems.postValue(result)
         }
 
         menuItems
     }
 
+    fun getMenuItemsDiff(): LiveData<DiffUtil.DiffResult> = Transformations.map(menuItems) { currentMenuItems ->
+        val diffUtilCallback = MenuItemsDiffUtilCallback(currentMenuItems, previousMenuItems)
+
+        DiffUtil.calculateDiff(diffUtilCallback)
+    }
+
+}
+
+private class MenuItemsDiffUtilCallback(val newItems: List<MenuItem>, val oldItems: List<MenuItem>) : DiffUtil.Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem: MenuItem = oldItems[oldItemPosition]
+        val newItem: MenuItem = newItems[newItemPosition]
+
+        return oldItem.title == newItem.title
+    }
+
+    override fun getOldListSize(): Int = oldItems.size
+
+    override fun getNewListSize(): Int = newItems.size
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem: MenuItem = oldItems[oldItemPosition]
+        val newItem: MenuItem = newItems[newItemPosition]
+
+        return oldItem.count == newItem.count
+                && oldItem.count == newItem.count
+    }
 }
 
 data class MenuItem(
     val title: String,
     val count: Int = 0,
-    val image: String? = null,
     val items: List<Feed>? = null
 )
 

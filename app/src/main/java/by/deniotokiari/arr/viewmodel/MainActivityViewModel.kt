@@ -10,6 +10,7 @@ import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.arr.worker.ArticlesFetchAndCacheWorker
 import by.deniotokiari.core.coroutines.bg
+import by.deniotokiari.core.extensions.pmap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,7 @@ class MainActivityViewModel(private val db: AppDatabase) : ViewModel() {
             val requests: List<OneTimeWorkRequest> = db
                 .rssFeedDao()
                 .allFeedsId()
-                .map { item -> ArticlesFetchAndCacheWorker.getOneTimeRequest(item.id) }
+                .pmap { item -> ArticlesFetchAndCacheWorker.getOneTimeRequest(item.id) }
 
             if (requests.isNotEmpty()) {
                 WorkManager.getInstance().enqueue(requests)

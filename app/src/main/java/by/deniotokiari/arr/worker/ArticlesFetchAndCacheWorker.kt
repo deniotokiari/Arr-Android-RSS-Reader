@@ -35,6 +35,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
         try {
             feed = getFeedById(id, db)
+
             val stream: InputStream? = getFeedArticlesInputStream(http, feed?.source)
             val result: FeedXmlResult? = parseXml(stream, feed)
 
