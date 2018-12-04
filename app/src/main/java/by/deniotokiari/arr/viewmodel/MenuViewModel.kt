@@ -12,12 +12,22 @@ import by.deniotokiari.core.extensions.pmap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.properties.Delegates
 
 class MenuViewModel(private val db: AppDatabase, private val uncategorized: String) : ViewModel() {
 
-    private val previousMenuItems: CopyOnWriteArrayList<MenuItem> = CopyOnWriteArrayList()
+    private var previousMenuItems: List<MenuItem> by Delegates.observable(ArrayList()) { _, oldValue, newValue ->
+        GlobalScope.launch(bg) {
+            val diffUtilCallback = MenuItemsDiffUtilCallback(newValue, oldValue)
+            val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffUtilCallback)
+
+
+            menuItemsDiff.postValue(diffResult)
+        }
+    }
+
     private val menuItems: MutableLiveData<List<MenuItem>> = MutableLiveData()
+    private val menuItemsDiff: MutableLiveData<DiffUtil.DiffResult> = MutableLiveData()
 
     fun getMenuItems(): LiveData<List<MenuItem>> = Transformations.switchMap(db.rssFeedDao().groups()) {
         GlobalScope.launch(bg) {
@@ -31,20 +41,26 @@ class MenuViewModel(private val db: AppDatabase, private val uncategorized: Stri
                     MenuItem(title = title, items = feedItems, count = count)
                 }
 
-            previousMenuItems.clear()
-            menuItems.value?.also { previous -> previousMenuItems.addAll(previous) }
-
             menuItems.postValue(result)
+
+            previousMenuItems = result
         }
 
         menuItems
     }
 
-    fun getMenuItemsDiff(): LiveData<DiffUtil.DiffResult> = Transformations.map(menuItems) { currentMenuItems ->
-        val diffUtilCallback = MenuItemsDiffUtilCallback(currentMenuItems, previousMenuItems)
+    /*fun getMenuItemsDiff(): LiveData<DiffUtil.DiffResult> = Transformations.switchMap(menuItems) { currentMenuItems ->
+        GlobalScope.launch(bg) {
+            val diffUtilCallback = MenuItemsDiffUtilCallback(currentMenuItems, previousMenuItems)
 
-        DiffUtil.calculateDiff(diffUtilCallback)
-    }
+            menuItemsDiff.postValue(DiffUtil.calculateDiff(diffUtilCallback))
+        }
+
+        menuItemsDiff
+    }*/
+
+
+    fun getMenuItemsDiff(): LiveData<DiffUtil.DiffResult> = menuItemsDiff
 
 }
 
