@@ -49,17 +49,6 @@ class MenuViewModel(private val db: AppDatabase, private val uncategorized: Stri
         menuItems
     }
 
-    /*fun getMenuItemsDiff(): LiveData<DiffUtil.DiffResult> = Transformations.switchMap(menuItems) { currentMenuItems ->
-        GlobalScope.launch(bg) {
-            val diffUtilCallback = MenuItemsDiffUtilCallback(currentMenuItems, previousMenuItems)
-
-            menuItemsDiff.postValue(DiffUtil.calculateDiff(diffUtilCallback))
-        }
-
-        menuItemsDiff
-    }*/
-
-
     fun getMenuItemsDiff(): LiveData<DiffUtil.DiffResult> = menuItemsDiff
 
 }

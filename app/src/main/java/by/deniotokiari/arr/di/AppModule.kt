@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import by.deniotokiari.arr.db.AppDatabase
-import com.bumptech.glide.Glide
+import by.deniotokiari.arr.thirdparty.GlideImageLoader
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
@@ -17,7 +17,7 @@ fun appModule(): Module = module {
 
     single { OkHttpClient() }
 
-    single { Glide.with(get<Context>()) }
+    single { GlideImageLoader().init(get()) }
 
 }
 

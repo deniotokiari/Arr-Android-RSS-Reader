@@ -5,9 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.arr.viewholder.MenuGroupFeedsViewHolder
 import by.deniotokiari.arr.viewmodel.Feed
-import com.bumptech.glide.RequestManager
+import by.deniotokiari.core.imageloader.IImageLoader
 
-class MenuGroupFeedsAdapter(private val glide: RequestManager) : RecyclerView.Adapter<MenuGroupFeedsViewHolder>() {
+class MenuGroupFeedsAdapter(private val imageLoader: IImageLoader) : RecyclerView.Adapter<MenuGroupFeedsViewHolder>() {
 
     val items: ArrayList<Feed> = ArrayList()
 
@@ -21,11 +21,7 @@ class MenuGroupFeedsAdapter(private val glide: RequestManager) : RecyclerView.Ad
 
         holder.title.text = feed.title
 
-        feed.icon?.also {
-            glide
-                .load(it)
-                .into(holder.icon)
-        }
+        feed.icon?.also { imageLoader.display(it, holder.icon) }
 
         val count: Int = item.count
 

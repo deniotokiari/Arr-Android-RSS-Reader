@@ -9,9 +9,9 @@ import by.deniotokiari.arr.viewmodel.Feed
 import by.deniotokiari.arr.viewmodel.MenuItem
 import by.deniotokiari.core.extensions.gone
 import by.deniotokiari.core.extensions.visible
-import com.bumptech.glide.RequestManager
+import by.deniotokiari.core.imageloader.IImageLoader
 
-class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val glide: RequestManager) : RecyclerView.Adapter<MenuGroupViewHolder>() {
+class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val imageLoader: IImageLoader) : RecyclerView.Adapter<MenuGroupViewHolder>() {
 
     private val expandedGroups: HashMap<String, Boolean> = HashMap()
 
@@ -56,7 +56,7 @@ class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val glide: Reque
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuGroupViewHolder = MenuGroupViewHolder(MenuGroupFeedsAdapter(glide), parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuGroupViewHolder = MenuGroupViewHolder(MenuGroupFeedsAdapter(imageLoader), parent)
 
     override fun getItemCount(): Int = items?.size ?: 0
 

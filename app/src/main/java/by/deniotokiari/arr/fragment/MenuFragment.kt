@@ -12,14 +12,14 @@ import by.deniotokiari.arr.R
 import by.deniotokiari.arr.adapter.MenuGroupAdapter
 import by.deniotokiari.arr.viewmodel.MenuItem
 import by.deniotokiari.arr.viewmodel.MenuViewModel
-import com.bumptech.glide.RequestManager
+import by.deniotokiari.core.imageloader.IImageLoader
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MenuFragment : Fragment() {
 
     private val menuViewModel: MenuViewModel by viewModel()
-    private val glide: RequestManager by inject()
+    private val imageLoader: IImageLoader by inject()
 
     private lateinit var menuRecyclerView: RecyclerView
 
@@ -35,7 +35,7 @@ class MenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         menuRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        menuRecyclerView.adapter = MenuGroupAdapter(ArrayList(), glide)
+        menuRecyclerView.adapter = MenuGroupAdapter(ArrayList(), imageLoader)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
