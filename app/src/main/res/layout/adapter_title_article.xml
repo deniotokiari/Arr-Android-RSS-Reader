@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <TextView
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            tools:text="Test Title"
-            android:id="@+id/title"
+
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-</LinearLayout>
+            android:layout_height="120dp">
+        <TextView
+                android:lines="7"
+                android:layout_toLeftOf="@+id/logo"
+                android:ellipsize="end"
+                tools:text="Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@+id/logo"/>
+
+        <ImageView
+                android:layout_width="120dp"
+                tools:background="@color/colorAccent"
+                android:id="@+id/logo"
+                android:layout_alignParentEnd="true"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
