@@ -21,7 +21,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         .getLong(FEED_ID, DEFAULT_FEED_ID)
         .let { id ->
             if (id == DEFAULT_FEED_ID) {
-                return Result.FAILURE
+                return Result.failure()
             }
 
             val http: OkHttpClient by inject()
@@ -51,13 +51,13 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
                 Log.d("LOG", "${feed?.source}: ${articles.size}")
 
-                return Result.SUCCESS
+                return Result.success()
             }
         } catch (e: Exception) {
             Log.e("LOG", "${feed?.source}: ${e.message}")
         }
 
-        return Result.FAILURE
+        return Result.failure()
     }
 
     internal fun parseXml(stream: InputStream?, feed: RssFeed?): FeedXmlResult? = stream
