@@ -22,7 +22,7 @@ interface ArticleDao {
     @Query("SELECT COUNT(*) from article AS article, rssfeed AS feed WHERE feed.`group` = :group AND article.feed_id = feed.id AND article.read = :read")
     fun countByGroup(group: String, read: Boolean): Int
 
-    @Query("SELECT * FROM article WHERE read = :read ORDER BY date")
+    @Query("SELECT * FROM article WHERE read = :read ORDER BY date DESC")
     fun getLastArticles(read: Boolean): LiveData<List<Article>>
 
     @Query("SELECT COUNT(*) FROM article WHERE feed_id = :id")

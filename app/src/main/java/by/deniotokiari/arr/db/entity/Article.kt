@@ -19,7 +19,7 @@ data class Article(
     @ColumnInfo(name = "feed_id")
     var feedId: Long?,
     var link: String?,
-    var date: String?,
+    var date: Long?,
     var creator: String?,
     var read: Boolean = false
 )

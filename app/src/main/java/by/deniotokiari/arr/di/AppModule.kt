@@ -8,6 +8,7 @@ import by.deniotokiari.arr.thirdparty.GlideImageLoader
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
+import java.text.SimpleDateFormat
 
 fun appModule(): Module = module {
 
@@ -19,7 +20,11 @@ fun appModule(): Module = module {
 
     single { GlideImageLoader().init(get()) }
 
+    single { SimpleDateFormat() }
+
 }
 
 private const val SHARED_PREFS_NAME = "app_prefs"
 private const val APP_DATABASE = "app_database"
+
+private const val ARTICLE_PUB

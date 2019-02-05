@@ -1,15 +1,11 @@
 package by.deniotokiari.arr.db
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
 import by.deniotokiari.arr.db.dao.RssFeedDao
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.arr.getValueBlocking
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
