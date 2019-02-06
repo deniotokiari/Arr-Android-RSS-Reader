@@ -4,8 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.viewholder.LastArticleViewHolder
+import by.deniotokiari.core.extensions.gone
+import by.deniotokiari.core.extensions.stripHtml
 
-class LastArticlesAdapter : RecyclerView.Adapter<LastArticleViewHolder>() {
+class LastArticlesAdapter() : RecyclerView.Adapter<LastArticleViewHolder>() {
 
     val items: ArrayList<Article> = ArrayList()
 
@@ -17,7 +19,13 @@ class LastArticlesAdapter : RecyclerView.Adapter<LastArticleViewHolder>() {
         val item: Article = items[position]
 
         holder.title.text = item.title
+        holder.creatorAndPublishDate.text = "by ${item.creator} / ${item.date}"
+        holder.description.text = item.description.stripHtml()
+
+        holder.logo.gone()
     }
+
+
 
 }
 

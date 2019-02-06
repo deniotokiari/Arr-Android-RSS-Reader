@@ -1,30 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:padding="8dp"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
-
-    <RelativeLayout
+    <ImageView
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:id="@+id/logo"
+            tools:background="@color/colorAccent"
             android:layout_width="match_parent"
-            android:layout_height="120dp">
-        <TextView
-                android:lines="7"
-                android:layout_toLeftOf="@+id/logo"
-                android:ellipsize="end"
-                tools:text="Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title Test Title"
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toStartOf="@+id/logo"/>
-
-        <ImageView
-                android:layout_width="120dp"
-                tools:background="@color/colorAccent"
-                android:id="@+id/logo"
-                android:layout_alignParentEnd="true"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"/>
-    </RelativeLayout>
-
-
-</RelativeLayout>
+            android:layout_height="300dp"/>
+    <TextView
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Test Title"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <Space
+            android:layout_width="match_parent"
+            android:layout_height="4dp"/>
+    <TextView
+            android:id="@+id/creator_and_publish_date"
+            tools:text="by Gonzo / 10min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <Space
+            android:layout_width="match_parent"
+            android:layout_height="4dp"/>
+    <TextView
+            tools:text="Test Description Test Description Test Description Test Description Test DescriptionTest DescriptionTest DescriptionTest Description Test Description Test DescriptionTest Description Test DescriptionTest Description Test DescriptionTest DescriptionTest DescriptionTest DescriptionTest Description"
+            android:id="@+id/description"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 fun appModule(): Module = module {
 
@@ -23,9 +23,12 @@ fun appModule(): Module = module {
 
     single(name = "article") { SimpleDateFormat(ARTICLE_PUB_DATE_TEMPLATE, Locale.US) }
 
+    single(name = "article_adapter") { SimpleDateFormat(ARTICLE_PUB_DATE_ADAPTER_TEMPLATE, Locale.US) }
+
 }
 
 private const val SHARED_PREFS_NAME = "app_prefs"
 private const val APP_DATABASE = "app_database"
 
 private const val ARTICLE_PUB_DATE_TEMPLATE = "EEE, d MMM yyyy HH:mm:ss z"
+private const val ARTICLE_PUB_DATE_ADAPTER_TEMPLATE = "EEE, d MMM HH:mm:ss"

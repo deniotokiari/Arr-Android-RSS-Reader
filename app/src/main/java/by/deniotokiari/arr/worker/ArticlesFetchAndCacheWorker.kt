@@ -2,11 +2,7 @@ package by.deniotokiari.arr.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
@@ -50,9 +46,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
                 feed?.icon = icon
 
-                feed?.also { item ->
-                    db.rssFeedDao().update(item)
-                }
+                feed?.also { item -> db.rssFeedDao().update(item) }
 
                 db.articleDao().insert(articles)
 
@@ -67,43 +61,44 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         return Result.failure()
     }
 
-    internal fun parseXml(stream: InputStream?, feed: RssFeed?, format: SimpleDateFormat): FeedXmlResult? = stream?.use {
-        val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
-        val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
+    internal fun parseXml(stream: InputStream?, feed: RssFeed?, format: SimpleDateFormat): FeedXmlResult? =
+        stream?.use {
+            val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
+            val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
 
-        xmlParser.setInput(it, null)
+            xmlParser.setInput(it, null)
 
-        var eventType: Int = xmlParser.eventType
-        val result: ArrayList<Article> = ArrayList()
-        var icon: String? = null
+            var eventType: Int = xmlParser.eventType
+            val result: ArrayList<Article> = ArrayList()
+            var icon: String? = null
 
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            when (eventType) {
-                XmlPullParser.START_TAG -> {
-                    val tagName: String = xmlParser.name
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                when (eventType) {
+                    XmlPullParser.START_TAG -> {
+                        val tagName: String = xmlParser.name
 
-                    when (tagName) {
-                        IMAGE -> {
-                            icon = getFeedIcon(xmlParser)
+                        when (tagName) {
+                            IMAGE -> {
+                                icon = getFeedIcon(xmlParser)
 
-                        }
-                        ITEM -> {
-                            val article: Article? = getFeedItem(xmlParser, feed, format)
+                            }
+                            ITEM -> {
+                                val article: Article? = getFeedItem(xmlParser, feed, format)
 
-                            article?.also { item -> result.add(item) }
+                                article?.also { item -> result.add(item) }
+                            }
                         }
                     }
                 }
+
+                xmlParser.next()
+                eventType = xmlParser.eventType
             }
 
-            xmlParser.next()
-            eventType = xmlParser.eventType
+            FeedXmlResult(icon, result)
         }
 
-        FeedXmlResult(icon, result)
-    }
-
-    private fun convertToUnixTime(pubDate: String?, format: SimpleDateFormat): Long? {
+    private fun convertToUnixTime(pubDate: String?, format: SimpleDateFormat): Long {
         val date: Date = format.parse(pubDate)
 
         return date.time
@@ -112,11 +107,15 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
     private fun getFeedById(id: Long, db: AppDatabase): RssFeed? = db.rssFeedDao().feedById(id)
 
     private fun getFeedArticlesInputStream(http: OkHttpClient, uri: String?): InputStream? = uri?.let { url ->
-        val request: Request = Request.Builder().url(url).build()
+        val request: Request = Request.Builder()
+            .url(url)
+            .build()
 
-        val response: Response? = http.newCall(request).execute()
+        val response: Response? = http.newCall(request)
+            .execute()
 
-        response?.body()?.byteStream()
+        response?.body()
+            ?.byteStream()
     }
 
     private fun getFeedIcon(xmlParser: XmlPullParser): String? {
@@ -149,7 +148,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         var title: String? = null
         var description: String? = null
         var link: String? = null
-        var date: Long? = null
+        var date = 0L
         var creator: String? = null
         val categories: ArrayList<String> = ArrayList()
 
@@ -208,7 +207,13 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
         return if (title != null && description != null) {
             val article = Article(
-                title = title, description = description, category = categories.joinToString(","), feedId = feed?.id, link = link, date = date, creator = creator
+                title = title,
+                description = description,
+                category = categories.joinToString(","),
+                feedId = feed?.id,
+                link = link,
+                date = date,
+                creator = creator
             )
 
             article
@@ -236,7 +241,9 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         private const val DEFAULT_FEED_ID = -1L
 
         fun getOneTimeRequest(id: Long): OneTimeWorkRequest {
-            val data: Data = Data.Builder().putLong(FEED_ID, id).build()
+            val data: Data = Data.Builder()
+                .putLong(FEED_ID, id)
+                .build()
 
             return OneTimeWorkRequestBuilder<ArticlesFetchAndCacheWorker>().setInputData(data).build()
         }
