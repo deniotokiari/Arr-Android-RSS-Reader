@@ -30,18 +30,19 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
         val http: OkHttpClient by inject()
         val db: AppDatabase by inject()
+        val articlePubDateFormat: SimpleDateFormat by inject(name = "article")
 
-        processFeed(id, http, db)
+        processFeed(id, http, db, articlePubDateFormat)
     }
 
-    private fun processFeed(id: Long, http: OkHttpClient, db: AppDatabase): Result {
+    private fun processFeed(id: Long, http: OkHttpClient, db: AppDatabase, format: SimpleDateFormat): Result {
         var feed: RssFeed? = null
 
         try {
             feed = getFeedById(id, db)
 
             val stream: InputStream? = getFeedArticlesInputStream(http, feed?.source)
-            val result: FeedXmlResult? = parseXml(stream, feed)
+            val result: FeedXmlResult? = parseXml(stream, feed, format)
 
             result?.also {
                 val icon: String? = it.icon
@@ -66,7 +67,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         return Result.failure()
     }
 
-    internal fun parseXml(stream: InputStream?, feed: RssFeed?): FeedXmlResult? = stream?.use {
+    internal fun parseXml(stream: InputStream?, feed: RssFeed?, format: SimpleDateFormat): FeedXmlResult? = stream?.use {
         val xmlParserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
         val xmlParser: XmlPullParser = xmlParserFactory.newPullParser()
 
@@ -87,7 +88,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
                         }
                         ITEM -> {
-                            val article: Article? = getFeedItem(xmlParser, feed)
+                            val article: Article? = getFeedItem(xmlParser, feed, format)
 
                             article?.also { item -> result.add(item) }
                         }
@@ -102,9 +103,8 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         FeedXmlResult(icon, result)
     }
 
-    private fun convertToUnixTime(pubDate: String?): Long? {
-        val dateFormatter = SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US)
-        val date: Date = dateFormatter.parse(pubDate)
+    private fun convertToUnixTime(pubDate: String?, format: SimpleDateFormat): Long? {
+        val date: Date = format.parse(pubDate)
 
         return date.time
     }
@@ -141,7 +141,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         return null
     }
 
-    private fun getFeedItem(xmlParser: XmlPullParser, feed: RssFeed?): Article? {
+    private fun getFeedItem(xmlParser: XmlPullParser, feed: RssFeed?, format: SimpleDateFormat): Article? {
         xmlParser.next()
 
         var tagName: String? = xmlParser.name
@@ -181,7 +181,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                         xmlParser.next()
 
                         if (xmlParser.eventType == XmlPullParser.TEXT) {
-                            date = convertToUnixTime(xmlParser.text)
+                            date = convertToUnixTime(xmlParser.text, format)
                         }
                     }
                     CREATOR -> {

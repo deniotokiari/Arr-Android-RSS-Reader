@@ -10,6 +10,8 @@ import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
@@ -24,7 +26,7 @@ class ArticlesFetchAndCacheWorkerTest {
         val worker = ArticlesFetchAndCacheWorker(Mockito.mock(Context::class.java), Mockito.mock(WorkerParameters::class.java))
         val stream: InputStream? = javaClass.classLoader?.getResourceAsStream("feed/habr.com")
 
-        val result: ArticlesFetchAndCacheWorker.FeedXmlResult? = worker.parseXml(stream, feed)
+        val result: ArticlesFetchAndCacheWorker.FeedXmlResult? = worker.parseXml(stream, feed, SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US))
 
         Assert.assertNotNull(result)
         Assert.assertEquals(20, result?.articles?.size)
