@@ -25,6 +25,9 @@ interface ArticleDao {
     @Query("SELECT * FROM article WHERE read = :read ORDER BY date DESC")
     fun getLastArticles(read: Boolean): LiveData<List<Article>>
 
+    @Query("SELECT * FROM article WHERE read = :read AND feed_id = :feedId ORDER BY date DESC")
+    fun getLastArticlesByFeedId(feedId: Long, read: Boolean): LiveData<List<Article>>
+
     @Query("SELECT COUNT(*) FROM article WHERE feed_id = :id")
     fun countByGroupId(id: Long?): Int
 

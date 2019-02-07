@@ -17,6 +17,6 @@ fun viewModelModule(): Module = module {
 
     viewModel { MenuStateViewModel() }
 
-    viewModel { LastArticlesViewModel(get()) }
+    viewModel { ArticlesViewModel(get()) }
 
 }

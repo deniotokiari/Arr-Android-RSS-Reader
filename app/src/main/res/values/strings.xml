@@ -14,4 +14,5 @@
     <string name="CLEAR_SELECTION">Clear selection</string>
     <string name="UNCATEGORIZED">Uncategorized</string>
     <string name="CREATOR_AND_PUBLISH_DATE">by %s / %s</string>
+    <string name="LAST_ARTICLES">Last Articles</string>
 </resources>
