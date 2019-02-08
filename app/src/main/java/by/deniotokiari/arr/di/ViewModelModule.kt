@@ -13,10 +13,12 @@ fun viewModelModule(): Module = module {
 
     viewModel { OpmlImportRssFeedViewModel(get(), get()) }
 
-    viewModel { MenuViewModel(get(), get<Context>().getString(R.string.UNCATEGORIZED)) }
+    viewModel { MenuViewModel(get(), get<Context>().getString(R.string.UNCATEGORIZED), get<Context>().getString(R.string.LAST_ARTICLES)) }
 
     viewModel { MenuStateViewModel() }
 
     viewModel { ArticlesViewModel(get()) }
+
+    viewModel { CurrentRssFeedViewModel() }
 
 }

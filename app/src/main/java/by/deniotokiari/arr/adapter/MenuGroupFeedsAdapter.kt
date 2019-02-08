@@ -1,13 +1,23 @@
 package by.deniotokiari.arr.adapter
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.arr.viewholder.MenuGroupFeedsViewHolder
 import by.deniotokiari.arr.viewmodel.Feed
 import by.deniotokiari.core.imageloader.IImageLoader
+import by.deniotokiari.core.recyclerview.OnItemClickListener
 
-class MenuGroupFeedsAdapter(private val imageLoader: IImageLoader) : RecyclerView.Adapter<MenuGroupFeedsViewHolder>() {
+class MenuGroupFeedsAdapter(private val imageLoader: IImageLoader, private val itemClickListener: OnItemClickListener<RssFeed>) : RecyclerView.Adapter<MenuGroupFeedsViewHolder>() {
+
+    private val clickListener: View.OnClickListener = View.OnClickListener {
+        val pair: Pair<*, *> = it.tag as Pair<*, *>
+        val position: Int = pair.first as Int
+        val item: RssFeed = pair.second as RssFeed
+
+        itemClickListener.onItemClick(position, item)
+    }
 
     val items: ArrayList<Feed> = ArrayList()
 
@@ -30,6 +40,9 @@ class MenuGroupFeedsAdapter(private val imageLoader: IImageLoader) : RecyclerVie
         } else {
             holder.count.text = count.toString()
         }
+
+        holder.itemView.tag = Pair(position, feed)
+        holder.itemView.setOnClickListener(clickListener)
     }
 
 }

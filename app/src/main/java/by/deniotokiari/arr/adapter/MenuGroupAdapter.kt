@@ -4,14 +4,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.arr.viewholder.MenuGroupViewHolder
 import by.deniotokiari.arr.viewmodel.Feed
 import by.deniotokiari.arr.viewmodel.MenuItem
 import by.deniotokiari.core.extensions.gone
 import by.deniotokiari.core.extensions.visible
 import by.deniotokiari.core.imageloader.IImageLoader
+import by.deniotokiari.core.recyclerview.OnItemClickListener
 
-class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val imageLoader: IImageLoader) : RecyclerView.Adapter<MenuGroupViewHolder>() {
+class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val imageLoader: IImageLoader, private val itemClickListener: OnItemClickListener<RssFeed>) : RecyclerView.Adapter<MenuGroupViewHolder>() {
 
     private val expandedGroups: HashMap<String, Boolean> = HashMap()
 
@@ -56,7 +58,7 @@ class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val imageLoader:
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuGroupViewHolder = MenuGroupViewHolder(MenuGroupFeedsAdapter(imageLoader), parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuGroupViewHolder = MenuGroupViewHolder(MenuGroupFeedsAdapter(imageLoader, itemClickListener), parent)
 
     override fun getItemCount(): Int = items?.size ?: 0
 

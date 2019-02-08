@@ -14,7 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-class MenuViewModel(private val db: AppDatabase, private val uncategorized: String) : ViewModel() {
+class MenuViewModel(private val db: AppDatabase, private val uncategorized: String, private val lastArticles: String) : ViewModel() {
 
     private var previousMenuItems: List<MenuItem> by Delegates.observable(ArrayList()) { _, oldValue, newValue ->
         GlobalScope.launch(bg) {
@@ -31,7 +31,7 @@ class MenuViewModel(private val db: AppDatabase, private val uncategorized: Stri
 
     fun getMenuItems(): LiveData<List<MenuItem>> = Transformations.switchMap(db.rssFeedDao().groups()) {
         GlobalScope.launch(bg) {
-            val result: List<MenuItem> = it
+            val menuItemsResult: List<MenuItem> = it
                 .pmap { item ->
                     val items: List<RssFeed>? = async(bg) { db.rssFeedDao().feedsByGroup(item.title) }.await()
                     val count: Int = async(bg) { db.articleDao().countByGroup(item.title, false) }.await()
@@ -40,6 +40,11 @@ class MenuViewModel(private val db: AppDatabase, private val uncategorized: Stri
 
                     MenuItem(title = title, items = feedItems, count = count)
                 }
+
+            val result: ArrayList<MenuItem> = ArrayList(menuItemsResult.size + 1)
+
+            result.add(MenuItem(lastArticles, reserved = true))
+            result.addAll(menuItemsResult)
 
             menuItems.postValue(result)
 
@@ -77,7 +82,8 @@ private class MenuItemsDiffUtilCallback(val newItems: List<MenuItem>, val oldIte
 data class MenuItem(
     val title: String,
     val count: Int = 0,
-    val items: List<Feed>? = null
+    val items: List<Feed>? = null,
+    val reserved: Boolean = false
 )
 
 data class Feed(

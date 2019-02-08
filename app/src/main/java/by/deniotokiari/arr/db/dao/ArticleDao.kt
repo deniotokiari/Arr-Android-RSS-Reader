@@ -31,4 +31,10 @@ interface ArticleDao {
     @Query("SELECT COUNT(*) FROM article WHERE feed_id = :id")
     fun countByGroupId(id: Long?): Int
 
+    @Query("SELECT * FROM article WHERE read = :read ORDER BY date DESC")
+    fun getLastArticlesSync(read: Boolean): List<Article>
+
+    @Query("SELECT * FROM article WHERE read = :read AND feed_id = :feedId ORDER BY date DESC")
+    fun getLastArticlesByFeedIdSync(feedId: Long, read: Boolean): List<Article>
+
 }
