@@ -52,7 +52,15 @@ class ArticleDetailsActivity : AppCompatActivity() {
 
     private fun getArticlePublishDate(): Long = intent.getLongExtra(EXTRA_KEY_PUBLISH_DATE, NO_VALUE)
 
-    private fun getFeedId(): Long = intent.getLongExtra(EXTRA_KEY_FEED_ID, NO_VALUE)
+    private fun getFeedId(): Long? {
+        val result: Long = intent.getLongExtra(EXTRA_KEY_FEED_ID, NO_VALUE)
+
+        return if (result == NO_VALUE) {
+            null
+        } else {
+            result
+        }
+    }
 
     companion object {
 
