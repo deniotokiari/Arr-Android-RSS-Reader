@@ -222,6 +222,8 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         }
 
         return if (title != null && description != null) {
+            Log.d("LOG", "Article: $link")
+
             val article = Article(
                 title = title,
                 description = description,
