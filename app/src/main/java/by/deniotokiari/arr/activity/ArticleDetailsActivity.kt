@@ -41,6 +41,7 @@ class ArticleDetailsActivity : AppCompatActivity() {
             val currentArticlePosition: Int? = it.find { article -> article.title == currentArticleTitle && article.date == currentArticlePublishDate }?.let { article -> it.indexOf(article) }
 
             viewPager.adapter = adapter
+            viewPager.offscreenPageLimit = 1
 
             currentArticlePosition?.also { position ->
                 viewPager.currentItem = position
