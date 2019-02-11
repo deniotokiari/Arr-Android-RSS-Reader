@@ -7,10 +7,17 @@ import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.viewholder.ArticleViewHolder
 import by.deniotokiari.core.extensions.gone
 import by.deniotokiari.core.extensions.stripHtml
+import by.deniotokiari.core.extensions.visible
+import by.deniotokiari.core.imageloader.IImageLoader
 import by.deniotokiari.core.recyclerview.OnItemClickListener
 import java.text.SimpleDateFormat
 
-class ArticlesAdapter(private val format: SimpleDateFormat, private val template: String, private val itemClickListener: OnItemClickListener<Article>) : RecyclerView.Adapter<ArticleViewHolder>() {
+class ArticlesAdapter(
+    private val format: SimpleDateFormat,
+    private val template: String,
+    private val itemClickListener: OnItemClickListener<Article>,
+    private val imageLoader: IImageLoader
+) : RecyclerView.Adapter<ArticleViewHolder>() {
 
     private val clickListener: View.OnClickListener = View.OnClickListener {
         val item: Article = it.tag as Article
@@ -29,9 +36,14 @@ class ArticlesAdapter(private val format: SimpleDateFormat, private val template
 
         holder.title.text = item.title
         holder.creatorAndPublishDate.text = String.format(template, item.creator, format.format(item.date))
-        holder.description.text = item.description.stripHtml()
+        holder.description.text = item.shortDescription
 
-        holder.logo.gone()
+        if (item.logo == null) {
+            holder.logo.gone()
+        } else {
+            imageLoader.display(item.logo!!, holder.logo)
+            holder.logo.visible()
+        }
 
         holder.itemView.tag = item
         holder.itemView.setOnClickListener(clickListener)

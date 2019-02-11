@@ -14,6 +14,7 @@ import by.deniotokiari.arr.activity.ArticleDetailsActivity
 import by.deniotokiari.arr.adapter.ArticlesAdapter
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.viewmodel.ArticlesViewModel
+import by.deniotokiari.core.imageloader.IImageLoader
 import by.deniotokiari.core.recyclerview.OnItemClickListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,6 +24,7 @@ class ArticlesFragment : Fragment() {
 
     private val articlesViewModel: ArticlesViewModel by viewModel()
     private val articlePublishDateFormat: SimpleDateFormat by inject("article_adapter")
+    private val imageLoader: IImageLoader by inject()
 
     private val itemClickListener: OnItemClickListener<Article> = object : OnItemClickListener<Article> {
         override fun onItemClick(position: Int, item: Article) {
@@ -38,7 +40,7 @@ class ArticlesFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_articles, container, false)
 
         recyclerView = view.findViewById(R.id.articles_recycler_vew)
-        recyclerView.adapter = ArticlesAdapter(articlePublishDateFormat, getString(R.string.CREATOR_AND_PUBLISH_DATE), itemClickListener)
+        recyclerView.adapter = ArticlesAdapter(articlePublishDateFormat, getString(R.string.CREATOR_AND_PUBLISH_DATE), itemClickListener, imageLoader)
 
         return view
     }

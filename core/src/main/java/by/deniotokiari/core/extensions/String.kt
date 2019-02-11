@@ -8,8 +8,8 @@ fun String.stripHtml(): String {
     } else {
         Html.fromHtml(this).toString()
     }
-            .replace('\n', ' ')
-            .replace(65532.toChar(), ' ')
-            .replace(Regex("\\s+"), " ")
-            .trim()
+        .replace('\n', ' ')
+        .replace(65532.toChar(), ' ')
+        .replace(Regex("\\s+"), " ")
+        .trim()
 }

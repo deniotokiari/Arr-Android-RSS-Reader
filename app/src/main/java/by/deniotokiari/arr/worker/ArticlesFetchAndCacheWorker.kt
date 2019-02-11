@@ -6,6 +6,7 @@ import androidx.work.*
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
+import by.deniotokiari.core.extensions.stripHtml
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -141,6 +142,21 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
     }
 
     private fun getFeedItem(xmlParser: XmlPullParser, feed: RssFeed?, format: SimpleDateFormat): Article? {
+        fun getShortDescription(description: String): String = description.stripHtml()
+
+        fun getLogo(description: String): String? {
+            val image = "<img src=\""
+            val index: Int = description.indexOf(image)
+
+            return if (index == -1) {
+                null
+            } else {
+                val ix: Int = index + image.length
+
+                return description.substring(ix, description.indexOf("\"", ix + 1))
+            }
+        }
+
         xmlParser.next()
 
         var tagName: String? = xmlParser.name
@@ -213,7 +229,9 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                 feedId = feed?.id,
                 link = link,
                 date = date,
-                creator = creator
+                creator = creator,
+                shortDescription = getShortDescription(description),
+                logo = getLogo(description)
             )
 
             article

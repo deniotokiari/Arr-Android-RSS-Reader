@@ -25,5 +25,7 @@ data class Article(
     var link: String?,
     var date: Long,
     var creator: String?,
-    var read: Boolean = false
+    var read: Boolean = false,
+    var shortDescription: String?,
+    var logo: String?
 ) : Serializable
