@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import by.deniotokiari.arr.R
@@ -14,10 +15,16 @@ class ArticleDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_article_detail, container, false)
 
-        val titleTextView: TextView = view.findViewById(R.id.title)
+        val title: TextView = view.findViewById(R.id.title)
+        val description: WebView = view.findViewById(R.id.description)
+
+        description.apply {
+            settings.javaScriptEnabled = true
+        }
 
         getArticle()?.also {
-            titleTextView.text = it.title
+            title.text = it.title
+            description.loadDataWithBaseURL("", "<style>img{display: inline; height: auto; max-width: 100%;}</style>${it.description}", "text/html", "UTF-8", "")
         }
 
         return view
