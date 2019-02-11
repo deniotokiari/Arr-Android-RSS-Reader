@@ -47,14 +47,18 @@ class MenuGroupAdapter(var items: ArrayList<MenuItem>?, private val imageLoader:
         val groupFeeds: RecyclerView = pair.first as RecyclerView
         val menuItem = pair.second as MenuItem
 
-        if (groupFeeds.visibility == View.VISIBLE) {
-            expandedGroups.remove(menuItem.title)
-
-            releaseGroupFeeds(groupFeeds)
+        if (menuItem.reserved) {
+            itemClickListener.onItemClick(-1, RssFeed(menuItem.title, "", "", "", ""))
         } else {
-            expandedGroups[menuItem.title] = true
+            if (groupFeeds.visibility == View.VISIBLE) {
+                expandedGroups.remove(menuItem.title)
 
-            initGroupFeeds(groupFeeds, menuItem)
+                releaseGroupFeeds(groupFeeds)
+            } else {
+                expandedGroups[menuItem.title] = true
+
+                initGroupFeeds(groupFeeds, menuItem)
+            }
         }
     }
 
