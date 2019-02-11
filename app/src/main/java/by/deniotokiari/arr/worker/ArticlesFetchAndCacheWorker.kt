@@ -7,6 +7,8 @@ import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.core.extensions.stripHtml
+import net.dankito.readability4j.Readability4J
+import net.dankito.readability4j.extended.Readability4JExtended
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -223,6 +225,8 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
 
         return if (title != null && description != null) {
             Log.d("LOG", "Article: $link")
+
+            //val readability: Readability4J = Readability4JExtended(link, )
 
             val article = Article(
                 title = title,

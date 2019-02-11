@@ -47,6 +47,8 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.viewpager
 
+    implementation libs.readability4j
+
     implementation libs.glide
     annotationProcessor libs.glide_compiler
 
