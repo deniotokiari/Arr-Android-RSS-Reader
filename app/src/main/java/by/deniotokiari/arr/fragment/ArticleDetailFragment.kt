@@ -40,7 +40,7 @@ class ArticleDetailFragment : Fragment() {
         private const val ENCODING = "UTF-8"
         private const val MIME_TYPE = "text/html"
         private const val EMPTY_STRING = ""
-        private const val ARTICLE_DETAIL_HTML_TEMPLATE = "<html><head><style>img{display: inline; height: auto; max-width: 100%%;}</style></head><body><div id=\"title\"><h2>%s</h2></div><div id=\"description\">%s</div></body></html>"
+        private const val ARTICLE_DETAIL_HTML_TEMPLATE = "<html><head><style>div,img{display: inline; height: auto; max-width: 100%%;}</style></head><body><div id=\"title\"><h2>%s</h2></div><div id=\"description\">%s</div></body></html>"
         private const val KEY_ARTICLE = "KEY_ARTICLE"
 
         fun newInstance(article: Article): ArticleDetailFragment {
