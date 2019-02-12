@@ -7,8 +7,6 @@ import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
 import by.deniotokiari.core.extensions.stripHtml
-import net.dankito.readability4j.Readability4J
-import net.dankito.readability4j.extended.Readability4JExtended
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -19,6 +17,8 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
 
@@ -146,16 +146,13 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
     private fun getFeedItem(xmlParser: XmlPullParser, feed: RssFeed?, format: SimpleDateFormat): Article? {
         fun getShortDescription(description: String): String = description.stripHtml()
 
-        fun getLogo(description: String): String? {
-            val image = "<img src=\""
-            val index: Int = description.indexOf(image)
+        fun getLogo(description: String, pattern: Pattern): String? {
+            val matcher: Matcher = pattern.matcher(description)
 
-            return if (index == -1) {
-                null
+            return if (matcher.find()) {
+                matcher.group(1)
             } else {
-                val ix: Int = index + image.length
-
-                return description.substring(ix, description.indexOf("\"", ix + 1))
+                null
             }
         }
 
@@ -224,9 +221,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         }
 
         return if (title != null && description != null) {
-            Log.d("LOG", "Article: $link")
-
-            //val readability: Readability4J = Readability4JExtended(link, )
+            val pattern: Pattern = Pattern.compile("(?i)<img[^>]+?src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>")
 
             val article = Article(
                 title = title,
@@ -237,7 +232,7 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                 date = date,
                 creator = creator,
                 shortDescription = getShortDescription(description),
-                logo = getLogo(description)
+                logo = getLogo(description, pattern)
             )
 
             article

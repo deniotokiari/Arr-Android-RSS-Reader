@@ -1,5 +1,6 @@
 package by.deniotokiari.arr.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ class ArticleDetailFragment : Fragment() {
         val description: WebView = view.findViewById(R.id.description)
 
         description.apply {
+            @SuppressLint("SetJavaScriptEnabled")
             settings.javaScriptEnabled = true
         }
 

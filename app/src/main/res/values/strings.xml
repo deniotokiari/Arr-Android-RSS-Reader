@@ -15,4 +15,6 @@
     <string name="UNCATEGORIZED">Uncategorized</string>
     <string name="CREATOR_AND_PUBLISH_DATE">by %s / %s</string>
     <string name="LAST_ARTICLES">Last Articles</string>
+    <string name="ACTION_ARTICLE_READABILITY_ON">Use readability for articles</string>
+    <string name="ACTION_ARTICLE_READABILITY_OFF">Show articles as is</string>
 </resources>

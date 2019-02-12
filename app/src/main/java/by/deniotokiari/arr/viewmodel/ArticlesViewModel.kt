@@ -2,6 +2,7 @@ package by.deniotokiari.arr.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
@@ -27,6 +28,11 @@ class ArticlesViewModel(private val db: AppDatabase) : ViewModel() {
         }
 
         return articles
+    }
+
+    // TODO: need to modify to binary search
+    fun getArticleIndex(title: String, date: Long): LiveData<Int> = Transformations.map(articles) {
+        it.find { article -> article.title == title && article.date == date }?.let { article -> it.indexOf(article) }
     }
 
 }

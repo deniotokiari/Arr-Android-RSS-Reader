@@ -2,7 +2,10 @@ package by.deniotokiari.arr.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
@@ -10,11 +13,17 @@ import androidx.viewpager.widget.ViewPager
 import by.deniotokiari.arr.R
 import by.deniotokiari.arr.adapter.ArticleDetailStateFragmentViewPagerAdapter
 import by.deniotokiari.arr.viewmodel.ArticlesViewModel
+import by.deniotokiari.core.extensions.get
+import by.deniotokiari.core.extensions.set
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ArticleDetailsActivity : AppCompatActivity() {
 
     private val articlesViewModel: ArticlesViewModel by viewModel()
+    private val prefs: SharedPreferences by inject()
+
+    private lateinit var adapter: ArticleDetailStateFragmentViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,21 +41,51 @@ class ArticleDetailsActivity : AppCompatActivity() {
         }
 
         articlesViewModel.getArticles(getFeedId()).observe(this, Observer {
-            val adapter = ArticleDetailStateFragmentViewPagerAdapter(supportFragmentManager, it)
+            adapter = ArticleDetailStateFragmentViewPagerAdapter(supportFragmentManager, it)
+        })
 
-            val currentArticleTitle: String = getArticleTitle()
-            val currentArticlePublishDate: Long = getArticlePublishDate()
-
-            // TODO: need to modify to binary search
-            val currentArticlePosition: Int? = it.find { article -> article.title == currentArticleTitle && article.date == currentArticlePublishDate }?.let { article -> it.indexOf(article) }
-
+        articlesViewModel.getArticleIndex(getArticleTitle(), getArticlePublishDate()).observe(this, Observer {
             viewPager.adapter = adapter
             viewPager.offscreenPageLimit = 1
-
-            currentArticlePosition?.also { position ->
-                viewPager.currentItem = position
-            }
+            viewPager.currentItem = it
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_article_details, menu)
+
+        val readabilityOn: MenuItem? = menu?.findItem(R.id.action_readability_on)
+        val readabilityOff: MenuItem? = menu?.findItem(R.id.action_readability_off)
+
+        val readability: Boolean = prefs[KEY_READABILITY + getFeedId()]
+
+        readabilityOff?.isVisible = readability
+        readabilityOn?.isVisible = !readability
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+
+                true
+            }
+            R.id.action_readability_on, R.id.action_readability_off -> {
+                val readability: Boolean = prefs[KEY_READABILITY + getFeedId()]
+
+                item.isVisible = false
+
+                prefs[KEY_READABILITY + getFeedId()] = !readability
+
+                invalidateOptionsMenu()
+
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun getArticleTitle(): String = intent.getStringExtra(EXTRA_KEY_TITLE)
@@ -68,6 +107,8 @@ class ArticleDetailsActivity : AppCompatActivity() {
         private const val EXTRA_KEY_TITLE = "EXTRA_KEY_TITLE"
         private const val EXTRA_KEY_PUBLISH_DATE = "EXTRA_KEY_PUBLISH_DATE"
         private const val EXTRA_KEY_FEED_ID = "EXTRA_KEY_FEED_ID"
+
+        private const val KEY_READABILITY = "KEY_READABILITY"
 
         private const val NO_VALUE = -1L
 
