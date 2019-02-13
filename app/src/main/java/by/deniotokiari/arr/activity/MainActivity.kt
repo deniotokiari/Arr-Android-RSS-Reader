@@ -5,7 +5,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import by.deniotokiari.arr.R
-import by.deniotokiari.arr.fragment.FeedsFragment
+import by.deniotokiari.arr.fragment.ContentFragment
 import by.deniotokiari.arr.fragment.ImportRssFeedsFragment
 import by.deniotokiari.arr.viewmodel.MainActivityViewModel
 import by.deniotokiari.arr.viewmodel.MenuStateViewModel
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.content, FeedsFragment())
+                    .replace(R.id.content, ContentFragment())
                     .commit()
             } else {
                 supportFragmentManager
@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (supportFragmentManager.backStackEntryCount == 0) {
-                val contentFragment: FeedsFragment? =
-                    supportFragmentManager.findFragmentById(R.id.content) as? FeedsFragment
+                val contentFragment: ContentFragment? =
+                    supportFragmentManager.findFragmentById(R.id.content) as? ContentFragment
 
                 contentFragment?.also {
                     if (!menuOpenState) {

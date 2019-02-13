@@ -15,7 +15,7 @@ import by.deniotokiari.arr.viewmodel.CurrentRssFeedViewModel
 import by.deniotokiari.arr.viewmodel.MenuStateViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class FeedsFragment : Fragment() {
+class ContentFragment : Fragment() {
 
     private val menuStateViewModel: MenuStateViewModel by sharedViewModel()
     private val currentRssFeedViewModel: CurrentRssFeedViewModel by sharedViewModel()
