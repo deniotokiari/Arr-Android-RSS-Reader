@@ -43,6 +43,7 @@ class ArticleDetailFragment : Fragment() {
             settings.javaScriptEnabled = true
         }
 
+        // TODO: should be part of viewModel
         articleReadabilityDetailsViewModel.getReadability().observe(this, Observer { readability ->
             article?.also {
                 val link: String? = it.link

@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import java.io.Serializable
 
 @Entity(
     foreignKeys = [ForeignKey(
@@ -14,18 +13,27 @@ import java.io.Serializable
         onDelete = ForeignKey.CASCADE
     )],
     indices = [Index(value = ["feed_id"])],
-    primaryKeys = ["title", "date"]
+    primaryKeys = ["title", "date", "description"]
 )
 data class Article(
     var title: String,
-    var description: String, // could be provided as text with html tags
-    var category: String,
-    @ColumnInfo(name = "feed_id")
-    var feedId: Long?,
-    var link: String?,
     var date: Long,
-    var creator: String?,
+    var description: String, // could be provided as text with html tags
+    @ColumnInfo(name = "feed_id")
+    var feedId: Long? = null,
+    var link: String? = null,
+    var creator: String? = null,
+
+    // local
     var read: Boolean = false,
-    var shortDescription: String?,
-    var logo: String?
-) : Serializable
+    var logo: String? = getLogo(description),
+    var shortDescription: String = getShortDescription(description)
+)
+
+private fun getLogo(description: String): String? {
+
+}
+
+private fun getShortDescription(description: String): String {
+
+}

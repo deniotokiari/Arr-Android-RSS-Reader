@@ -7,7 +7,7 @@ import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.fragment.ArticleDetailFragment
 
 class ArticleDetailStateFragmentViewPagerAdapter(
-    private val fragmentManager: FragmentManager,
+    fragmentManager: FragmentManager,
     private val articles: List<Article>
 ) : FragmentStatePagerAdapter(fragmentManager) {
 

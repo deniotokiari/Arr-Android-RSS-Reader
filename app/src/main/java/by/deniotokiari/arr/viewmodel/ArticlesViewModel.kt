@@ -20,19 +20,11 @@ class ArticlesViewModel(private val db: AppDatabase) : ViewModel() {
         db.articleDao().getLastArticlesByFeedId(feedId, false)
     }
 
-    fun getArticles(feedId: Long? = null): LiveData<List<Article>> {
-        GlobalScope.launch(bg) {
-            val result: List<Article> = if (feedId == null) db.articleDao().getLastArticlesSync(false) else db.articleDao().getLastArticlesByFeedIdSync(feedId, false)
-
-            articles.postValue(result)
-        }
-
-        return articles
-    }
-
     // TODO: need to modify to binary search
     fun getArticleIndex(title: String, date: Long): LiveData<Int> = Transformations.map(articles) {
         it.find { article -> article.title == title && article.date == date }?.let { article -> it.indexOf(article) }
     }
 
 }
+
+data class

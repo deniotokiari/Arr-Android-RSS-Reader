@@ -2,11 +2,14 @@ package by.deniotokiari.arr.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import by.deniotokiari.arr.db.AppDatabase
 import by.deniotokiari.arr.db.entity.Article
 import by.deniotokiari.arr.db.entity.RssFeed
-import by.deniotokiari.core.extensions.stripHtml
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -16,9 +19,7 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
 import java.text.SimpleDateFormat
-import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import java.util.Date
 
 class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
 
@@ -52,8 +53,6 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                 feed?.also { item -> db.rssFeedDao().update(item) }
 
                 db.articleDao().insert(articles)
-
-                Log.d("LOG", "${feed?.source}: ${articles.size}")
 
                 return Result.success()
             }
@@ -144,18 +143,6 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
     }
 
     private fun getFeedItem(xmlParser: XmlPullParser, feed: RssFeed?, format: SimpleDateFormat): Article? {
-        fun getShortDescription(description: String): String = description.stripHtml()
-
-        fun getLogo(description: String, pattern: Pattern): String? {
-            val matcher: Matcher = pattern.matcher(description)
-
-            return if (matcher.find()) {
-                matcher.group(1)
-            } else {
-                null
-            }
-        }
-
         xmlParser.next()
 
         var tagName: String? = xmlParser.name
@@ -165,7 +152,6 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         var link: String? = null
         var date = 0L
         var creator: String? = null
-        val categories: ArrayList<String> = ArrayList()
 
         while (tagName != ITEM) {
             if (xmlParser.eventType != XmlPullParser.END_TAG) {
@@ -205,13 +191,6 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
                             creator = xmlParser.text
                         }
                     }
-                    CATEGORY -> {
-                        xmlParser.next()
-
-                        if (xmlParser.eventType == XmlPullParser.TEXT) {
-                            categories.add(xmlParser.text)
-                        }
-                    }
                 }
             }
 
@@ -221,18 +200,15 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         }
 
         return if (title != null && description != null) {
-            val pattern: Pattern = Pattern.compile("(?i)<img[^>]+?src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>")
+            //val pattern: Pattern = Pattern.compile("(?i)<img[^>]+?src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>")
 
             val article = Article(
                 title = title,
                 description = description,
-                category = categories.joinToString(","),
                 feedId = feed?.id,
                 link = link,
                 date = date,
-                creator = creator,
-                shortDescription = getShortDescription(description),
-                logo = getLogo(description, pattern)
+                creator = creator
             )
 
             article
@@ -255,7 +231,6 @@ class ArticlesFetchAndCacheWorker(context: Context, params: WorkerParameters) : 
         private const val LINK = "link"
         private const val DATE = "pubDate"
         private const val CREATOR = "dc:creator"
-        private const val CATEGORY = "category"
 
         private const val DEFAULT_FEED_ID = -1L
 
