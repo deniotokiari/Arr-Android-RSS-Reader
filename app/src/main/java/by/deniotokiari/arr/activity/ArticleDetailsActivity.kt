@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import by.deniotokiari.arr.R
 import by.deniotokiari.arr.adapter.ArticleDetailStateFragmentViewPagerAdapter
+import by.deniotokiari.arr.viewmodel.ArticleReadabilityDetailsViewModel
 import by.deniotokiari.arr.viewmodel.ArticlesViewModel
 import by.deniotokiari.core.extensions.get
 import by.deniotokiari.core.extensions.set
@@ -21,6 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ArticleDetailsActivity : AppCompatActivity() {
 
     private val articlesViewModel: ArticlesViewModel by viewModel()
+    private val articleReadabilityDetailsViewModel: ArticleReadabilityDetailsViewModel by viewModel()
     private val prefs: SharedPreferences by inject()
 
     private lateinit var adapter: ArticleDetailStateFragmentViewPagerAdapter
@@ -43,6 +45,8 @@ class ArticleDetailsActivity : AppCompatActivity() {
         articlesViewModel.getArticles(getFeedId()).observe(this, Observer {
             adapter = ArticleDetailStateFragmentViewPagerAdapter(supportFragmentManager, it)
         })
+
+        articleReadabilityDetailsViewModel.updateReadability(prefs[KEY_READABILITY + getFeedId()])
 
         articlesViewModel.getArticleIndex(getArticleTitle(), getArticlePublishDate()).observe(this, Observer {
             viewPager.adapter = adapter
@@ -74,6 +78,8 @@ class ArticleDetailsActivity : AppCompatActivity() {
             }
             R.id.action_readability_on, R.id.action_readability_off -> {
                 val readability: Boolean = prefs[KEY_READABILITY + getFeedId()]
+
+                articleReadabilityDetailsViewModel.updateReadability(!readability)
 
                 item.isVisible = false
 

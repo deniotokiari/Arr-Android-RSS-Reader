@@ -21,4 +21,6 @@ fun viewModelModule(): Module = module {
 
     viewModel { CurrentRssFeedViewModel() }
 
+    viewModel { ArticleReadabilityDetailsViewModel() }
+
 }
